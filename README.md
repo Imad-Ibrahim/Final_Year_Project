@@ -6,5 +6,10 @@ This is all my work for my final year project (FYP).
 - Google auth addedd.
 - Firestore added.
 - Ticketmaster API added.
-- Events display.
+- Events displayed.
 - CSS
+
+## Version2 :smiley:
+- About page added.
+- Contact page added.
+- Send comments added

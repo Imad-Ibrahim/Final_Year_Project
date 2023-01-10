@@ -22,7 +22,6 @@ var provider = new firebase.auth.GoogleAuthProvider();
 firebase.auth().useDeviceLanguage();
 const db = firebase.firestore();
 
-
 async function signIn() {
   firebase.auth()
     .signInWithPopup(provider)
@@ -34,11 +33,12 @@ async function signIn() {
       // The signed-in user info.
       var user = result.user;
 
-      document.getElementById("username").innerHTML = "Hi " + user.displayName;
+      document.getElementById("username").innerHTML = "Hey " + user.displayName;
       document.getElementById("signOut").style.display = "block";
       document.getElementById("chat").style.display = "block";
       document.getElementById("signIn").style.display = "none";
     }).catch((error) => {
+      document.getElementById("signIn").style.display = "block";
       alert("Something went Wrong: " + error.message);
     });
 }

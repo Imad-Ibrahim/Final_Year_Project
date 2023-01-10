@@ -24,7 +24,7 @@ $.getJSON(url, function (data) {
                     location: [parseFloat(events._embedded.events[i]._embedded.venues[0].location.latitude),
                     parseFloat(events._embedded.events[i]._embedded.venues[0].location.longitude)],
                     drivers: []
-                })
+                });
             }
         });
     }
