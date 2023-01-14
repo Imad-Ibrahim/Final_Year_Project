@@ -11,10 +11,14 @@
   <script type="module" src="../controller/getEvents.js"></script>
   <script type="module" src="../controller/firebaseConfig.js"></script>
   <script type="module" src="../controller/main.js"></script>
+  <script type="module" src="../controller/sendEmail.js"></script>
+  <!-- <script type="module" src="../controller/chatPage.js"></script> -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
 </head>
 <body id="top">
   <header>
@@ -29,7 +33,7 @@
                       <li class="nav-item"><a class='nav-link' href="#">Events</a></li>
                       <li class="nav-item"><a class='nav-link' href="About.html">About</a></li>
                       <li class="nav-item"><a class='nav-link' href="Contact.html">Contact</a></li>
-                      <li class="nav-item" id="chat" style="display: none;"><a class='nav-link' href="#">Chat</a></li>
+                      <li class="nav-item" id="chat" style="display: none;"><a class='nav-link' href="chat.html">Chat</a></li>
                       <li class="nav-item" id="signOut" style="display: none;"><a class='nav-link' href="#" onclick="signOut(); return false;">Log out</a></li>
                       <li class="nav-item" id="signIn" style="display: none;"><a class='nav-link' href="#" onclick="signIn(); return false;">Login/Sign up with
                         <img width="2%" alt="Google sign-in" src="../assets/images/google.png" />
@@ -46,12 +50,10 @@
       <!-- EVENTS -->
     </div>
   </div> 
-  
+
   <footer class="container-fluid text-center">
     <a href="#top" title="To Top">Back to top</a>
     <p>Share Wheels</p>
   </footer>
-
-
 </body>
 </html>

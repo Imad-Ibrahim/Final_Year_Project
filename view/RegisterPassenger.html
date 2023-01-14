@@ -43,31 +43,30 @@
   </header>
   
   <div class="container marginTop" >
-    <h1 id="username"></h1>
     <div class="row">
-        <div class="col-md-12 mx-auto">
+        <div class="col-md-10 mx-auto">
+            <h1 id="username"></h1>
             <div class="card border-primary mb-3">
-                <h3 class="card-header" style="text-align: center; color: white;">ABOUT</h3>
+                <h3 class="card-header" style="text-align: center; color: white;">Register Passenger Form</h3>
                 <div class="card-body">
-                    <p style="font-size: 120%;">Share Wheels provides an opportunity for people to travel together to the same
-                        event. Created with the environment in mind, Share Wheels connects fans going to the same events together, and
-                        offers them an opportunity to carpool. If you can’t drive? No problem! You can still sign up to be a passenger
-                        to all events!
-                    </p><br>
-                    <p style="font-size: 110%;">The primary advantage of carpooling to events rather than driving individually is that there is reduced
-                        carbon emissions.
-                        If one car is able to bring 5 people, there is 80% less carbon emissions going into the atmosphere than if
-                        each person was to drive individually.
-                        There is also 80% less fuel consumed.
+                    <form id="registerPassengerForm">
+                        <div class="form-group">
+                            <label for="passengerCity">City/Town </label>
+                            <input type="text" class="form-control" id="passengerCity" name="passengerCity" placeholder="Enter your city/town" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="passengerCounty">County </label>
+                            <input type="text" class="form-control" id="passengerCounty" name="passengerCounty" placeholder="Enter your county" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxKmRange">Max KM Range</label>
+                            <input type="text" class="form-control" id="maxKmRange" name="maxKmRange" placeholder="Enter max KM range">
+                            <span>***Defult range is 50km***</span>
+                        </div>
                         <br>
-                        On a broader scale, carpooling reduces the traffic on our road network. On an individual level, it is financially cheaper to carpool to an event. The money saved on fuel can
-                        be used to purchase something at the event itself!
-                    </p><br>
-                    <p style="font-size: 110%;"> It is our belief that by sharing wheels to and from events we can have a positive impact on the level of carbon
-                        emissions we produce on our way to our favourite events.
-                        By sharing wheels, we also get the opportunity to meet and travel with fellow fans! <br>
-                        It is for this reason that, Share Wheels is a win-win opportunity for both the environment and event goers!
-                    </p>
+                        <button type="button" class="btn btn-success" onclick="registerPassenger();">Register</button>
+                        <a href="index.html" class="btn btn-danger">Cancel</a>
+                    </form>
                 </div>
                 <div class="card-footer text-muted"></div>
             </div>

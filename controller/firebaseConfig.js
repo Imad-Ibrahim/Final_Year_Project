@@ -45,7 +45,9 @@ async function signIn() {
 window.signIn = signIn;
 
 function signOut() {
-  firebase.auth().signOut()
+  let message = "Are you sure you want to log out?";
+  if (confirm(message)) {
+    firebase.auth().signOut()
     .then(function () {
       document.getElementById("signOut").style.display = "none";
       document.getElementById("signIn").style.display = "block";
@@ -53,6 +55,7 @@ function signOut() {
     }, function (error) {
       alert("Something went Wrong: " + error.message);
     });
+  }
 }
-window.signOut = signOut
+window.signOut = signOut;
 export default db;

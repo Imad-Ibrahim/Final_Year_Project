@@ -43,31 +43,43 @@
   </header>
   
   <div class="container marginTop" >
-    <h1 id="username"></h1>
     <div class="row">
-        <div class="col-md-12 mx-auto">
+        <div class="col-md-10 mx-auto">
+            <h1 id="username"></h1>
             <div class="card border-primary mb-3">
-                <h3 class="card-header" style="text-align: center; color: white;">ABOUT</h3>
+                <h3 class="card-header" style="text-align: center; color: white;">Register Driver Form</h3>
                 <div class="card-body">
-                    <p style="font-size: 120%;">Share Wheels provides an opportunity for people to travel together to the same
-                        event. Created with the environment in mind, Share Wheels connects fans going to the same events together, and
-                        offers them an opportunity to carpool. If you can’t drive? No problem! You can still sign up to be a passenger
-                        to all events!
-                    </p><br>
-                    <p style="font-size: 110%;">The primary advantage of carpooling to events rather than driving individually is that there is reduced
-                        carbon emissions.
-                        If one car is able to bring 5 people, there is 80% less carbon emissions going into the atmosphere than if
-                        each person was to drive individually.
-                        There is also 80% less fuel consumed.
+                    <form id="registerDriverForm">
+                        <div class="form-group">
+                            <label for="driverCarReg">Car Registration</label>
+                            <input type="text" class="form-control" id="driverCarReg" name="driverCarReg" placeholder="Enter your car registration" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverCity">City/Town </label>
+                            <input type="text" class="form-control" id="driverCity" name="driverCity" placeholder="Enter your city/town" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverCounty">County </label>
+                            <input type="text" class="form-control" id="driverCounty" name="driverCounty" placeholder="Enter your county" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverMeetingPoint">Meeting Point </label>
+                            <input type="text" class="form-control" id="driverMeetingPoint" name="driverMeetingPoint" placeholder="Enter meeting point" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverNumSeats">Number of seats free </label>
+                            <input type="number" class="form-control" id="driverNumSeats" name="driverNumSeats" placeholder="Enter number of seats" required>
+                        </div>
                         <br>
-                        On a broader scale, carpooling reduces the traffic on our road network. On an individual level, it is financially cheaper to carpool to an event. The money saved on fuel can
-                        be used to purchase something at the event itself!
-                    </p><br>
-                    <p style="font-size: 110%;"> It is our belief that by sharing wheels to and from events we can have a positive impact on the level of carbon
-                        emissions we produce on our way to our favourite events.
-                        By sharing wheels, we also get the opportunity to meet and travel with fellow fans! <br>
-                        It is for this reason that, Share Wheels is a win-win opportunity for both the environment and event goers!
-                    </p>
+                        <div class="form-group">                            
+                            <label for="carType">Car Type:  </label>
+                            <input type="checkbox" id="electric" name="carType" value="Electric" required>
+                            <label for="electric">Electric</label>
+                        </div>
+                        <br>
+                        <button type="button" class="btn btn-success" onclick="registerDriver();">Register</button>
+                        <a href="index.html" class="btn btn-danger">Cancel</a>
+                    </form>
                 </div>
                 <div class="card-footer text-muted"></div>
             </div>
