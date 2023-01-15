@@ -27,3 +27,6 @@ This is all my work for my final year project (FYP).
 - chat encrypted.
 - fixed few bugs.
 
+## Version5 :smiley:
+- fixed few bugs with chat.
+

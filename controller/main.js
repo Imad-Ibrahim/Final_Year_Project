@@ -146,8 +146,12 @@ function addAttendee(eventId, driverId) {
   db.collection('users').doc(driverId).get().then((doc) => {
     if (doc.exists) {
       db.collection('users').doc(driverId).update({
-        eventPassanger: firebase.firestore.FieldValue.arrayUnion(eventId + "_" + firebase.auth().currentUser.uid)
-      })
+        eventPassanger: firebase.firestore.FieldValue.arrayUnion(
+          {
+            eventId: eventId,
+            passengerId: firebase.auth().currentUser.uid
+          })
+      });
     } else {
       // doc.data() will be undefined in this case
       alert("No user found with given driverId.");
@@ -237,7 +241,7 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
             return null
           }
         }).catch((error) => {
-          alert("Error getting document");
+          alert("Something went wrong, there is either no driver or no free seats for this event, please try again later.");
           return null
         });
       }
@@ -301,7 +305,6 @@ async function registerPassenger() {
       },
     }).catch((error) => {
       alert("Something went wrong.");
-      console.log("Error getting document:", error);
     });
   }else
     alert("All fields must be filled out!!!");
