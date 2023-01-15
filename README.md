@@ -21,4 +21,9 @@ This is all my work for my final year project (FYP).
 - match driver done.
 - chat page added.
 - send chat to driver.
+- send emails to drivers.
+
+## Version4 :smiley:
+- chat encrypted.
+- fixed few bugs.
 

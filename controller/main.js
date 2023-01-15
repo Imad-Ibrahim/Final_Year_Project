@@ -29,7 +29,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
       }
     }).catch((error) => {
-      alert("Error getting document for user sign up/sign in: " + error);
+      alert("Error getting document for user sign up/sign in");
     });
   } else {
     // No user is signed in.
@@ -97,7 +97,6 @@ function sendComments(){
   }else{
     alert("All fields are required");
   }
-
 }
 window.sendComments = sendComments;
 
@@ -210,7 +209,7 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
               }
             }
             else if (selectedDriver == firebase.auth().currentUser.uid) {
-              alert("You are already a driver for this event.")
+              alert("You are already a driver for this event.");
             }
             else {
               const selectedIndex = driverList.map(object => object.driverId).indexOf(selectedDriver);
@@ -302,6 +301,7 @@ async function registerPassenger() {
       },
     }).catch((error) => {
       alert("Something went wrong.");
+      console.log("Error getting document:", error);
     });
   }else
     alert("All fields must be filled out!!!");
@@ -313,7 +313,7 @@ function getSelectedEventID(){
 }
 
 function registerDriver() {
-  var carReg = document.getElementById("driverCarReg").value
+  var carReg = document.getElementById("driverCarReg").value;
   var city = document.getElementById("driverCity").value;
   var county = document.getElementById("driverCounty").value;
   var meetingPoint = document.getElementById("driverMeetingPoint").value;
@@ -331,7 +331,7 @@ function registerDriver() {
     $.ajax({
       url: url,
       error: function () {
-        alert("Sorry your request timed out, please try again later!")
+        alert("Sorry your request timed out, please try again later!");
       },
       method: 'GET',
       startTime: new Date().getTime(),
@@ -357,7 +357,7 @@ function registerDriver() {
         }
       },
     }).catch((error) => {
-      alert("Something went wrong: " + error);
+      alert("Something went wrong");
     });
   }
   else{
