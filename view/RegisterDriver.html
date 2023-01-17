@@ -22,8 +22,11 @@
   <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
           <div class="container-fluid">
+            <div id="logo">
+                <a href="index.html"><img id="logoImg" src="../assets/images/google.png" alt="Logo"></a>
+              </div>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon" onclick="navBar();"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarColor01">
                   <ul class="navbar-nav me-auto">
@@ -33,7 +36,7 @@
                       <li class="nav-item" id="chat" style="display: none;"><a class='nav-link' href="chat.html">Chat</a></li>
                       <li class="nav-item" id="signOut" style="display: none;"><a class='nav-link' href="#" onclick="signOut(); return false;">Log out</a></li>
                       <li class="nav-item" id="signIn" style="display: none;"><a class='nav-link' href="#" onclick="signIn(); return false;">Login/Sign up with
-                        <img width="2%" alt="Google sign-in" src="../assets/images/google.png" />
+                        <img id="google" alt="Google sign-in" src="../assets/images/google.png" />
                       </a></li>
                   </ul>
               </div>

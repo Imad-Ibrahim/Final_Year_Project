@@ -17,16 +17,20 @@ This is all my work for my final year project (FYP).
 ## Version3 :smiley:
 - Register as a driver added.
 - Register as a passenger added.
-- distance calculation done.
-- match driver done.
-- chat page added.
-- send chat to driver.
-- send emails to drivers.
+- Distance calculation done.
+- Match driver done.
+- Chat page added.
+- Send chat to driver.
+- Send emails to drivers.
 
 ## Version4 :smiley:
-- chat encrypted.
-- fixed few bugs.
+- Chat encrypted.
+- Fixed few bugs.
 
 ## Version5 :smiley:
-- fixed few bugs with chat.
+- Fixed few bugs with chat.
+
+## Version6 :smiley:
+- Fixed the mobile view bug.
+- Added a logo placeholder.
 

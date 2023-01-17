@@ -369,4 +369,12 @@ function registerDriver() {
 }
 window.registerDriver = registerDriver;
 
-
+function navBar() {
+  if (document.getElementById('navbarColor01').style.display === 'block') {
+      document.getElementById("navbarColor01").style.display = "none";
+  }
+  else {
+      document.getElementById("navbarColor01").style.display = "block";
+  }
+}
+window.navBar = navBar;

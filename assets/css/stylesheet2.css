@@ -25,3 +25,14 @@
   float: right;
 }
 
+#logo, #logoImg{
+	width: 3em;
+	height: 3em;
+}
+#logo img:hover{
+	transform: scale(0.9);
+}
+#google{
+  width: 1.5em;
+	height: 1.5em;
+}
