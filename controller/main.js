@@ -286,11 +286,6 @@ async function registerPassenger() {
   if (city.length > 0 && county.length > 0){
     $.ajax({
       url: url,
-      error: function () {
-        alert("Sorry your request timed out, please try again later!");
-      },
-      method: 'GET',
-      startTime: new Date().getTime(),
       complete: function (data) {
         passengerLatitude = data.responseJSON.data[0].latitude;
         passengerLongitude = data.responseJSON.data[0].longitude;
@@ -305,6 +300,7 @@ async function registerPassenger() {
       },
     }).catch((error) => {
       alert("Something went wrong.");
+      console.log(error);
     });
   }else
     alert("All fields must be filled out!!!");
@@ -333,11 +329,6 @@ function registerDriver() {
   if(carReg.length > 0 && city.length > 0 && county.length > 0 && meetingPoint.length > 0 && numSeats.length > 0){
     $.ajax({
       url: url,
-      error: function () {
-        alert("Sorry your request timed out, please try again later!");
-      },
-      method: 'GET',
-      startTime: new Date().getTime(),
       complete: function (data) {
         driverLatitude = data.responseJSON.data[0].latitude;
         driverLongitude = data.responseJSON.data[0].longitude;
@@ -360,7 +351,8 @@ function registerDriver() {
         }
       },
     }).catch((error) => {
-      alert("Something went wrong");
+      alert("Something went wrong.");
+      console.log(error);
     });
   }
   else{

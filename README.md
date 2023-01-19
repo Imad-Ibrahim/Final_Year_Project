@@ -34,3 +34,6 @@ This is all my work for my final year project (FYP).
 - Fixed the mobile view bug.
 - Added a logo placeholder.
 
+## Version7 :smiley:
+- Few modifications.
+

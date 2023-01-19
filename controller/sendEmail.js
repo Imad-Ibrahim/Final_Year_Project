@@ -1,5 +1,9 @@
+import { emailJS_Key } from "./config.js";
+import { emailJS_Template_Key } from "./config.js";
+import { emailJS_service_Key } from "./config.js";
+
 (function () {
-  emailjs.init("hXjFXpHI1Sjfo-K-9");
+  emailjs.init(emailJS_Key);
 })();
 
 export default function sendMail(driverName, driverEmail, eventName, passengerName) {
@@ -11,7 +15,7 @@ export default function sendMail(driverName, driverEmail, eventName, passengerNa
     passengerName: passengerName
   };
 
-  emailjs.send("service_b1n2mv3", "template_4nv4b6o", templateParams)
+  emailjs.send(emailJS_service_Key, emailJS_Template_Key, templateParams)
     .then(function (response) {
       console.log('Confirmation email sent successfully', response.status, response.text);
     }, function (error) {

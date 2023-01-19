@@ -1,7 +1,8 @@
-import db from "./firebaseConfig.js"
+import db from "./firebaseConfig.js";
+import { ticketmasterAPI } from "./config.js";
 
 let events = [];
-let url = 'https://app.ticketmaster.com/discovery/v2/events.json?countryCode=IE&apikey=HXGAu9U70Dep03uyz1QMaAgP2fBor6zx';
+let url = 'https://app.ticketmaster.com/discovery/v2/events.json?countryCode=IE&apikey=' + ticketmasterAPI;
 
 $.getJSON(url, function (data) {
     events = data;
