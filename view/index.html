@@ -46,12 +46,25 @@
 
   <div class="container marginTop">
     <h1 id="username"></h1>
+    <div class="col-md-12 mx-auto">
+      <div class="col-md-8 mx-auto">
+          
+          <span>Please enter either event name, or date from and to.</span>
+          <div class="input-group mb-4">  
+            <input type="text" class="form-control" id="eventName" placeholder="Event name" aria-label="Event name" aria-describedby="button-addon2">
+            <input type="date" class="form-control" id="dateFrom" placeholder="Date from" aria-label="Date from" aria-describedby="button-addon2">
+            <input type="date" class="form-control" id="dateTo" placeholder="Date to" aria-label="Date to" aria-describedby="button-addon2">
+            <button class="btn btn-primary" type="button" id="button-addon2" onclick="eventSearch();">Search</button>
+          </div>
+      </div>
+    </div>
+
     <div id="eventList" class="row">
       <!-- EVENTS -->
     </div>
   </div> 
 
-  <footer class="container-fluid text-center">
+  <footer class="container-fluid text-center" id="footer" style="display: none;">
     <a href="#top" title="To Top">Back to top</a>
     <p>Share Wheels</p>
   </footer>

@@ -37,3 +37,6 @@ This is all my work for my final year project (FYP).
 ## Version7 :smiley:
 - Few modifications.
 
+## Version8 :smiley:
+- Search feature added.
+

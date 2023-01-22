@@ -72,6 +72,7 @@ function displayEvents() {
           <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
         </div>`;
       }
+      document.getElementById("footer").style.display = "block";
       document.getElementById('eventList').appendChild(newDiv);
     });
   });
@@ -370,3 +371,54 @@ function navBar() {
   }
 }
 window.navBar = navBar;
+
+function eventSearch(){
+  document.getElementById("footer").style.display = "none";
+  document.getElementById('eventList').innerHTML = '';
+  let eventname = document.getElementById('eventName').value;
+  let dateFrom = document.getElementById('dateFrom').value;
+  let dateTo = document.getElementById('dateTo').value;
+  if(eventname.length <= 0 && !dateFrom & !dateTo){
+    alert("Please enter either event name, or date from and to.");
+    window.location.href = "../view/index.html";
+  }
+  else{
+    db.collection("events").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {  
+        let newDiv = document.createElement("div");
+        newDiv.className = 'col-md-4 mx-auto';
+        let date = doc.data().date_time.split(" ");
+        if(doc.data().name == eventname){
+          newDiv.innerHTML = `
+          <div class="card border-primary mb-3">
+            <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+            <h6 class="card-header">`+ doc.data().name + `</h6>
+            <div class="card-body">
+              <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
+              <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
+              <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
+            </div>
+            <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+          </div>`;
+          document.getElementById('eventList').appendChild(newDiv);
+        }
+        else if(date[0] >= dateFrom && date[0] <= dateTo){
+          document.getElementById("footer").style.display = "block";
+          newDiv.innerHTML = `
+          <div class="card border-primary mb-3">
+            <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+            <h6 class="card-header">`+ doc.data().name + `</h6>
+            <div class="card-body">
+              <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
+              <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
+              <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
+            </div>
+            <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+          </div>`;
+          document.getElementById('eventList').appendChild(newDiv);
+        }
+      });
+    });
+  }
+}
+window.eventSearch = eventSearch;
