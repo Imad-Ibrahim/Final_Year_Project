@@ -40,3 +40,6 @@ This is all my work for my final year project (FYP).
 ## Version8 :smiley:
 - Search feature added.
 
+## Version9 :smiley:
+- Search feature error fixed.
+
