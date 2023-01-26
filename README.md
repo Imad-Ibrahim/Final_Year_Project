@@ -43,3 +43,7 @@ This is all my work for my final year project (FYP).
 ## Version9 :smiley:
 - Search feature error fixed.
 
+## Version10 :smiley:
+- Empty chat error fixed.
+- Average reduced emissions.
+- Clear search fields.

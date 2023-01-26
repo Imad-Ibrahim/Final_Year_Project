@@ -17,13 +17,16 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+
+
 </head>
 <body id="top">  
   <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
           <div class="container-fluid">
             <div id="logo">
-              <a href="index.html"><img id="logoImg" src="../assets/images/google.png" alt="Logo"></a>
+              <a href="index.html"><img id="logoImg" src="../assets/images/logo.png" alt="Logo"></a>
             </div>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon" onclick="navBar();"></span>
@@ -45,6 +48,10 @@
   </header>
 
   <div class="container marginTop">
+    <div class="waviy" id="averageTitle" style="display: none;">
+      <span style="--i:1" id="emissionImpact"></span>
+      <h3>AVERAGE REDUCED EMISSIONS</h3>
+    </div>
     <h1 id="username"></h1>
     <div class="col-md-12 mx-auto">
       <div class="col-md-8 mx-auto">
@@ -55,10 +62,13 @@
             <input type="date" class="form-control" id="dateFrom" placeholder="Date from" aria-label="Date from" aria-describedby="button-addon2">
             <input type="date" class="form-control" id="dateTo" placeholder="Date to" aria-label="Date to" aria-describedby="button-addon2">
             <button class="btn btn-primary" type="button" id="button-addon2" onclick="eventSearch();">Search</button>
+            <button class="btn btn-danger" type="button" id="button-addon2" onclick="clearSearch();">Clear</button>
           </div>
       </div>
     </div>
 
+    <h1 id="eventNotFound" style="color: white;"></h1>
+    <h1 id="loading"></h1>
     <div id="eventList" class="row">
       <!-- EVENTS -->
     </div>

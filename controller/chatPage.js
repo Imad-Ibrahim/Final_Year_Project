@@ -7,17 +7,21 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
         document.getElementById("username").innerHTML = "Hey " + firebase.auth().currentUser.displayName;
+        document.getElementById('noneToDisplay').innerHTML = "Loading...";
         populateEvents();
+        setTimeout(() => {
+            document.getElementById('noneToDisplay').innerHTML = "It looks like your chat page is empty.";
+        }, 3500);
+        
     }
 });
 
 function populateEvents() {
     //events attending
     db.collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
-
         if (doc.exists) {
             if (doc.data().eventsAttended) {
-                let eventsAttended = doc.data().eventsAttended;  
+                let eventsAttended = doc.data().eventsAttended; 
                 eventsAttended.forEach(element => {                    
                     db.collection('users').doc(element.driver).get().then((doc) => {
                         let user_name = "";
@@ -27,6 +31,7 @@ function populateEvents() {
                         db.collection('events').doc(element.eventId).get().then((doc) => {
                             if (doc.exists) {
                                 document.getElementById("attending").style.display = "block";
+                                document.getElementById('noneToDisplay').style.display = "none"; 
                                 let panel = document.createElement('div');
                                 panel.className = 'col-md-4 mx-auto';
                                 panel.innerHTML = `
@@ -47,6 +52,7 @@ function populateEvents() {
                             alert("Error getting document.");
                             console.log("Error getting document:", error);
                         });
+                        
                     }).catch((error) => {
                         alert("Error getting document.");
                         console.log("Error getting document:", error);
@@ -64,6 +70,8 @@ function populateEvents() {
                         db.collection('events').doc(element.eventId).get().then((doc) => {
                             if (doc.exists) {
                                 document.getElementById("driving").style.display = "block";
+                                document.getElementById('noneToDisplay').style.display = "none";
+                                emptyChat = true;
                                 let panel = document.createElement('div');
                                 panel.className = 'col-md-4 mx-auto';
                                 panel.innerHTML = `
@@ -83,14 +91,14 @@ function populateEvents() {
                         }).catch((error) => {
                             alert("Error getting document.");
                             console.log("Error getting document:", error);
-                        });
+                        });                            
                     }).catch((error) => {
                         alert("Error getting document.");
                         console.log("Error getting document:", error);
                     });
                 });
             }
-        }
+        }        
     }).catch((error) => {
         alert("Error getting document.");
         console.log("Error getting document:", error);

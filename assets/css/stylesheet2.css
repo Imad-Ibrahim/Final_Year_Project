@@ -27,7 +27,7 @@
 
 #logo, #logoImg{
 	width: 3em;
-	height: 3em;
+	height: 4em;
 }
 #logo img:hover{
 	transform: scale(0.9);
@@ -35,4 +35,29 @@
 #google{
   width: 1.5em;
 	height: 1.5em;
+}
+
+.waviy {
+  position: relative;
+  font-size: 60px;
+  text-align: center;
+  color: white;
+}
+.waviy span {
+  font-family: 'Alfa Slab One', cursive;
+  position: relative;
+  display: inline-block;
+  color: #fff;
+  text-transform: uppercase;
+  animation: waviy 1s infinite;
+  animation-delay: calc(.1s * var(--i));
+  
+}
+@keyframes waviy {
+  0%,40%,100% {
+    transform: translateY(0)
+  }
+  20% {
+    transform: translateY(-20px)
+  }
 }

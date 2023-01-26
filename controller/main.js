@@ -3,8 +3,16 @@ import sendMail from "./sendEmail.js"
 import { positionStackAPI } from "./config.js";
 
 let loggedIn = false;
+let impactCollection = [];
 
 firebase.auth().onAuthStateChanged(function (user) {
+  getEmissions();
+  setTimeout(() => {
+    let result = ((impactCollection[1] + impactCollection[2] + impactCollection[3]) * 5) / 3;
+    let avg = Math.round(result * 100) / 100;
+    document.getElementById("emissionImpact").innerHTML = avg;
+    document.getElementById("averageTitle").style.display = "block";
+  }, 3500);
   if (user) {
     // User is signed in.
     document.getElementById("username").innerHTML = "Hey " + firebase.auth().currentUser.displayName;
@@ -12,8 +20,10 @@ firebase.auth().onAuthStateChanged(function (user) {
     document.getElementById("chat").style.display = "block";
     document.getElementById("signIn").style.display = "none";
     loggedIn = true;
-    if(window.location.pathname == "/view/index.html")
+    if(window.location.pathname == "/view/index.html"){
+      document.getElementById('loading').innerHTML = "Loading...";
       displayEvents();
+    }
     db.collection("users").doc(firebase.auth().currentUser.uid).get().then((doc) => {
       if (doc.exists) {
         console.log("User verified");
@@ -34,8 +44,10 @@ firebase.auth().onAuthStateChanged(function (user) {
   } else {
     // No user is signed in.
     loggedIn = false;
-    if(window.location.pathname == "/view/index.html")
+    if(window.location.pathname == "/view/index.html"){
+      document.getElementById('loading').innerHTML = "Loading...";
       displayEvents();
+    }
     document.getElementById("signIn").style.display = "block";
     document.getElementById("signOut").style.display = "none";
     document.getElementById("chat").style.display = "none";
@@ -72,6 +84,7 @@ function displayEvents() {
           <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
         </div>`;
       }
+      document.getElementById('loading').style.display = "none";
       document.getElementById("footer").style.display = "block";
       document.getElementById('eventList').appendChild(newDiv);
     });
@@ -373,11 +386,13 @@ function navBar() {
 window.navBar = navBar;
 
 function eventSearch(){
+  document.getElementById('eventNotFound').innerHTML = "";
   document.getElementById("footer").style.display = "none";
   document.getElementById('eventList').innerHTML = '';
   let eventname = document.getElementById('eventName').value;
   let dateFrom = document.getElementById('dateFrom').value;
   let dateTo = document.getElementById('dateTo').value;
+  let found = false;
   if(eventname.length <= 0 && !dateFrom & !dateTo){
     alert("Please enter either event name, or date from and to.");
     window.location.href = "../view/index.html";
@@ -391,6 +406,7 @@ function eventSearch(){
         if(loggedIn)
         {
           if(doc.data().name == eventname){
+            found = true;
             newDiv.innerHTML = `
             <div class="card border-primary mb-3">
               <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
@@ -405,6 +421,7 @@ function eventSearch(){
             document.getElementById('eventList').appendChild(newDiv);
           }
           else if(date[0] >= dateFrom && date[0] <= dateTo){
+            found = true;
             document.getElementById("footer").style.display = "block";
             newDiv.innerHTML = `
             <div class="card border-primary mb-3">
@@ -422,6 +439,7 @@ function eventSearch(){
         }
         else{
           if(doc.data().name == eventname){
+            found = true;
             newDiv.innerHTML = `
             <div class="card border-primary mb-3">
               <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
@@ -434,6 +452,7 @@ function eventSearch(){
             document.getElementById('eventList').appendChild(newDiv);
           }
           else if(date[0] >= dateFrom && date[0] <= dateTo){
+            found = true;
             document.getElementById("footer").style.display = "block";
             newDiv.innerHTML = `
             <div class="card border-primary mb-3">
@@ -448,7 +467,46 @@ function eventSearch(){
           }
         }      
       });
+      if(!found){
+        if(eventname.length <= 0){
+          document.getElementById('eventNotFound').innerHTML = "There is no match found between '" + dateFrom + "' and '" + dateTo + "'.";
+        }
+        else if (!dateFrom && !dateTo){
+          document.getElementById('eventNotFound').innerHTML = "There is no match found with '" + eventname + "'.";
+        }
+      }
     });
   }
 }
 window.eventSearch = eventSearch;
+
+function clearSearch(){
+  document.getElementById('eventName').value = "";
+  document.getElementById('dateFrom').value = "";
+  document.getElementById('dateTo').value = "";
+}
+window.clearSearch = clearSearch;
+
+function getEmissions(){
+  let none = 0, low = 0, medium = 0, high = 0;
+  db.collection("events").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {        
+      if(doc.data().drivers.length != 0){
+        for(let i = 0; i < doc.data().drivers.length; i++){
+          if(doc.data().drivers[i].impact == "NONE")
+            none++;
+          else if(doc.data().drivers[i].impact == "LOW")
+            low++;
+          else if(doc.data().drivers[i].impact == "MEDIUM")
+            medium++;
+          else if(doc.data().drivers[i].impact == "HIGH")
+            high++;
+        }
+      }
+    });
+    impactCollection[0] = none;
+    impactCollection[1] = low;
+    impactCollection[2] = medium;
+    impactCollection[3] = high;
+  });  
+}
