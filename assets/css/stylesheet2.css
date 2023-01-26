@@ -27,10 +27,11 @@
 
 #logo, #logoImg{
 	width: 3em;
-	height: 4em;
-}
+	height: 3em;
+} 
+
 #logo img:hover{
-	transform: scale(0.9);
+	transform: scale(1.3);
 }
 #google{
   width: 1.5em;
@@ -51,7 +52,6 @@
   text-transform: uppercase;
   animation: waviy 1s infinite;
   animation-delay: calc(.1s * var(--i));
-  
 }
 @keyframes waviy {
   0%,40%,100% {

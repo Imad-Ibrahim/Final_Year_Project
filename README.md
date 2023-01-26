@@ -47,3 +47,7 @@ This is all my work for my final year project (FYP).
 - Empty chat error fixed.
 - Average reduced emissions.
 - Clear search fields.
+
+## Version11 :smiley:
+- Logo added.
+- Fixed few bugs.

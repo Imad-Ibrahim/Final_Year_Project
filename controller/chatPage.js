@@ -11,8 +11,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         populateEvents();
         setTimeout(() => {
             document.getElementById('noneToDisplay').innerHTML = "It looks like your chat page is empty.";
-        }, 3500);
-        
+        }, 3500); 
     }
 });
 
@@ -71,7 +70,6 @@ function populateEvents() {
                             if (doc.exists) {
                                 document.getElementById("driving").style.display = "block";
                                 document.getElementById('noneToDisplay').style.display = "none";
-                                emptyChat = true;
                                 let panel = document.createElement('div');
                                 panel.className = 'col-md-4 mx-auto';
                                 panel.innerHTML = `

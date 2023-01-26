@@ -6,13 +6,17 @@ let loggedIn = false;
 let impactCollection = [];
 
 firebase.auth().onAuthStateChanged(function (user) {
-  getEmissions();
-  setTimeout(() => {
-    let result = ((impactCollection[1] + impactCollection[2] + impactCollection[3]) * 5) / 3;
-    let avg = Math.round(result * 100) / 100;
-    document.getElementById("emissionImpact").innerHTML = avg;
-    document.getElementById("averageTitle").style.display = "block";
-  }, 3500);
+  if(window.location.pathname == "/view/index.html"){
+    getEmissions();
+    setTimeout(() => {
+      if (isNaN(impactCollection)){
+        let result = ((impactCollection[1] + impactCollection[2] + impactCollection[3]) * 5) / 3;
+        let avg = Math.round(result * 100) / 100;
+        document.getElementById("emissionImpact").innerHTML = avg;
+        document.getElementById("averageTitle").style.display = "block";
+      }
+    }, 3500);
+  }
   if (user) {
     // User is signed in.
     document.getElementById("username").innerHTML = "Hey " + firebase.auth().currentUser.displayName;
