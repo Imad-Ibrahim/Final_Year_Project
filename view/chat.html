@@ -51,6 +51,42 @@
     <div class="container marginTop" >
         <h1 id="username"></h1>
         <h2 id="noneToDisplay" style="color: white;"></h2>
+        <div id="chatWindow" class="col-md-8 mx-auto" style="display: none;">
+            <div class="card border-primary mb-3">
+                <h3 class="card-header" style="text-align: center;color: white;">CHAT</h3>
+                <div class="card-body">
+                        <div id="chatMessages">
+                            <!-- Chat messages -->
+                        </div>
+                        <div id="chatInput" >
+                            <div id="message_field">
+                                <textarea class="form-control" id="messageText" rows="1" placeholder="Type message.."></textarea>
+                                <br>
+                                <button style="float: right; margin-left: 0.5rem;" class="btn btn-success" id="sendBtn" onclick="sendChat();">Send</button>
+                                <button style="float: right;" class="btn btn-danger" onclick="closeChat();">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted"></div>
+            </div>
+        </div>
+
+        <div id="rate" class="col-md-8 mx-auto" style="display: none;">
+            <div class="card border-primary mb-3">
+                <h3 class="card-header" style="text-align: center;color: white;">Rate</h3>
+                <div class="card-body">
+                        <div id="rateField">
+                            <input type="number" class="form-control" id="rateInput" placeholder="eg. 4">
+                            <br>
+                            <button style="float: right; margin-left: 0.5rem;" class="btn btn-success" id="addRateBtn" onclick="addRate();">Rate</button>
+                            <button style="float: right;" class="btn btn-danger" onclick="closeRate();">Close</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted"></div>
+            </div>
+        </div>
         <div id="driving" class="col-md-12 mx-auto" style="display: none; color: white;">
             <div class="card border-primary mb-3">
                 <h3 class="card-header" style="text-align: center;">Driving</h3>
@@ -71,24 +107,13 @@
             </div>
         </div>
       
-        <div id="chatWindow" class="col-md-8 mx-auto" style="display: none;">
+        <div id="attended" class="col-md-12 mx-auto" style="display: none;">
             <div class="card border-primary mb-3">
-                <h3 class="card-header" style="text-align: center;color: white;">CHAT</h3>
-                <div class="card-body">
-                        <div id="chatMessages">
-                            <!-- Chat messages -->
-                        </div>
-                        <div id="chatInput" >
-                            <div id="message_field">
-                                <textarea class="form-control" id="messageText" rows="1" placeholder="Type message.."></textarea>
-                                <br>
-                                <button style="float: right; margin-left: 0.5rem;" class="btn btn-success" onclick="sendChat();">Send</button>
-                                <button style="float: right;" class="btn btn-danger" onclick="closeChat()">Close</button>
-                            </div>
-                        </div>
-                    </div>
+                <h3 class="card-header" style="text-align: center; color: white;">Attended</h3>
+                <br>
+                <div id="attended_panels" class="row">
+        
                 </div>
-                <div class="card-footer text-muted"></div>
             </div>
         </div>
     </div>

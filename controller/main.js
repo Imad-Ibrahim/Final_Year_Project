@@ -12,8 +12,10 @@ firebase.auth().onAuthStateChanged(function (user) {
       if (isNaN(impactCollection)){
         let result = ((impactCollection[1] + impactCollection[2] + impactCollection[3]) * 5) / 3;
         let avg = Math.round(result * 100) / 100;
-        document.getElementById("emissionImpact").innerHTML = avg;
-        document.getElementById("averageTitle").style.display = "block";
+        if(avg > 0){
+          document.getElementById("emissionImpact").innerHTML = avg;
+          document.getElementById("averageTitle").style.display = "block";
+        }
       }
     }, 3500);
   }
@@ -39,7 +41,9 @@ firebase.auth().onAuthStateChanged(function (user) {
           email: firebase.auth().currentUser.email,
           photoUrl: firebase.auth().currentUser.photoURL,
           eventsAttended: [],
-          messages: []
+          messages: [],
+          ratedEvent: [],
+          driverRate: parseFloat(0)
         });
       }
     }).catch((error) => {
@@ -64,33 +68,38 @@ function displayEvents() {
     querySnapshot.forEach((doc) => {  
       let newDiv = document.createElement("div");
       newDiv.className = 'col-md-4 mx-auto';
-      if(loggedIn){
-        newDiv.innerHTML = `
-        <div class="card border-primary mb-3">
-          <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-          <h6 class="card-header">`+ doc.data().name + `</h6>
-          <div class="card-body">
-            <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
-            <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
-            <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
-          </div>
-          <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-        </div>`;
+      let date = doc.data().date_time.split(" ");
+      let currentDate = new Date();
+      currentDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+      if(date[0] >= currentDate){
+        if(loggedIn){
+          newDiv.innerHTML = `
+          <div class="card border-primary mb-3">
+            <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+            <h6 class="card-header">`+ doc.data().name + `</h6>
+            <div class="card-body">
+              <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
+              <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
+              <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
+            </div>
+            <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+          </div>`;
+        }
+        else{
+          newDiv.innerHTML = `
+          <div class="card border-primary mb-3">
+            <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+            <h6 class="card-header">`+ doc.data().name + `</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
+            </ul>
+            <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+          </div>`;
+        }
+        document.getElementById('loading').style.display = "none";
+        document.getElementById("footer").style.display = "block";  
+        document.getElementById('eventList').appendChild(newDiv);
       }
-      else{
-        newDiv.innerHTML = `
-        <div class="card border-primary mb-3">
-          <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-          <h6 class="card-header">`+ doc.data().name + `</h6>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
-          </ul>
-          <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-        </div>`;
-      }
-      document.getElementById('loading').style.display = "none";
-      document.getElementById("footer").style.display = "block";
-      document.getElementById('eventList').appendChild(newDiv);
     });
   });
 }
@@ -124,19 +133,24 @@ function addDriver(address, username, eventId, driverId, driverLat, driverLon, d
       if (doc.data().drivers.some(driver => driver.driverId === driverId)) {
         alert("Already Driving to the event.")
       } else {
-        db.collection('events').doc(eventId).update({
-          drivers: firebase.firestore.FieldValue.arrayUnion({
-            driverId: driverId,
-            username: username,
-            userEmail: firebase.auth().currentUser.email,
-            latitude: driverLat,
-            longitude: driverLon,
-            address: address,
-            carReg: driverReg,
-            meetingPoint: meetingPoint,
-            numSeats: parseInt(numSeats),
-            impact: impact
-          })
+        let dRate;        
+        db.collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+          dRate = doc.data().driverRate;
+          db.collection('events').doc(eventId).update({
+            drivers: firebase.firestore.FieldValue.arrayUnion({
+              driverId: driverId,
+              username: username,
+              userEmail: firebase.auth().currentUser.email,
+              latitude: driverLat,
+              longitude: driverLon,
+              address: address,
+              carReg: driverReg,
+              meetingPoint: meetingPoint,
+              numSeats: parseInt(numSeats),
+              impact: impact,
+              driverRate: parseFloat(dRate)
+            })
+          });
         });
         alert("Thanks for signing on to our platform! please keep an eye on your email and chat for further notifications.");
         document.getElementById('registerDriverForm').reset();
@@ -197,23 +211,19 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
               alert("Sorry, there is no driver for " + eventName + " event, please try again later.");
               return null;
             }
-
             //set default selection to first driver with free seats
-            var j;
-            var selectedDriver;
-            var shortestDistance;
-            for (j = 0; j < driverList.length; j++) {
-              if (driverList[j].numSeats > 0) {
-                selectedDriver = driverList[j].driverId;
-                shortestDistance = distanceCalculation(passengerLatitude, driverList[j].latitude, passengerLongitude, driverList[j].longitude);
-                break;
-              }
+            let shortestDistance, selectedDriver, j;               
+            for (j = 0; j < driverList.length; j++) {  
+                if (driverList[j].numSeats > 0 && (parseFloat(driverList[j].driverRate) == parseFloat(0) || parseFloat(driverList[j].driverRate) > parseFloat(1.9))) {
+                  selectedDriver = driverList[j].driverId;
+                  shortestDistance = distanceCalculation(passengerLatitude, driverList[j].latitude, passengerLongitude, driverList[j].longitude);
+                  break;
+                }
             }
-
             //find optimal driver
             let i = j + 1;
             for (i; i < driverList.length; i++) {
-              if (driverList[i].numSeats > 0) {
+              if (driverList[i].numSeats > 0  && (parseFloat(driverList[i].driverRate) == parseFloat(0) || parseFloat(driverList[i].driverRate) > parseFloat(1.9)))  {
                 let distance = distanceCalculation(passengerLatitude, driverList[i].latitude, passengerLongitude, driverList[i].longitude);
                 if (distance < shortestDistance) {
                   selectedDriver = driverList[i].driverId;
@@ -223,8 +233,10 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
             }
             if (shortestDistance > maxMatchRangekm) {
               //Increase match range if no driver found up to max of passenger's km range OR 50km by defult.
-              if (maxMatchRangekm >= passengerKmRange)
+              if (maxMatchRangekm >= passengerKmRange){
+                alert("No driver found within the 50km or the givan km range.");
                 return null;
+              }
               else {
                 maxMatchRangekm += 5;
                 matchDriver(passengerLatitude, passengerLongitude, getSelectedEventID(), maxMatchRangekm, passengerKmRange);
@@ -232,6 +244,7 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
             }
             else if (selectedDriver == firebase.auth().currentUser.uid) {
               alert("You are already a driver for this event.");
+              return null;
             }
             else {
               const selectedIndex = driverList.map(object => object.driverId).indexOf(selectedDriver);
@@ -255,11 +268,12 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
             }
           } else {
             // doc.data() will be undefined in this case
-            alert("No event found with given id");
+            alert("No event found");
             return null
           }
         }).catch((error) => {
-          alert("Something went wrong, there is either no driver or no free seats for this event, please try again later.");
+          console.log(error)
+          alert("Something went wrong, there is either no driver or no free seats for this event, please try again later....");
           return null
         });
       }
@@ -407,68 +421,72 @@ function eventSearch(){
         let newDiv = document.createElement("div");
         newDiv.className = 'col-md-4 mx-auto';
         let date = doc.data().date_time.split(" ");
-        if(loggedIn)
-        {
-          if(doc.data().name == eventname){
-            found = true;
-            newDiv.innerHTML = `
-            <div class="card border-primary mb-3">
-              <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-              <h6 class="card-header">`+ doc.data().name + `</h6>
-              <div class="card-body">
-                <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
-                <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
-                <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
-              </div>
-              <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-            </div>`;
-            document.getElementById('eventList').appendChild(newDiv);
+        let currentDate = new Date();
+        currentDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+        if(date[0] >= currentDate){
+          if(loggedIn)
+          {
+            if(doc.data().name == eventname){
+              found = true;
+              newDiv.innerHTML = `
+              <div class="card border-primary mb-3">
+                <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                <h6 class="card-header">`+ doc.data().name + `</h6>
+                <div class="card-body">
+                  <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
+                  <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
+                  <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
+                </div>
+                <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+              </div>`;
+              document.getElementById('eventList').appendChild(newDiv);
+            }
+            else if(date[0] >= dateFrom && date[0] <= dateTo){
+              found = true;
+              document.getElementById("footer").style.display = "block";
+              newDiv.innerHTML = `
+              <div class="card border-primary mb-3">
+                <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                <h6 class="card-header">`+ doc.data().name + `</h6>
+                <div class="card-body">
+                  <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
+                  <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
+                  <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
+                </div>
+                <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+              </div>`;
+              document.getElementById('eventList').appendChild(newDiv);
+            } 
           }
-          else if(date[0] >= dateFrom && date[0] <= dateTo){
-            found = true;
-            document.getElementById("footer").style.display = "block";
-            newDiv.innerHTML = `
-            <div class="card border-primary mb-3">
-              <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-              <h6 class="card-header">`+ doc.data().name + `</h6>
-              <div class="card-body">
-                <a href="../view/RegisterDriver.html?eID=` + doc.data().id + `" class="card-link">Driver</a>
-                <a href="../view/RegisterPassenger.html?eID=` + doc.data().id + `" class="card-link">Passenger</a>
-                <a href="` + doc.data().url + `" class="card-link" target="_blank">More Details</a>
-              </div>
-              <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-            </div>`;
-            document.getElementById('eventList').appendChild(newDiv);
+          else{
+            if(doc.data().name == eventname){
+              found = true;
+              newDiv.innerHTML = `
+              <div class="card border-primary mb-3">
+                <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                <h6 class="card-header">`+ doc.data().name + `</h6>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
+                </ul>
+                <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+              </div>`;
+              document.getElementById('eventList').appendChild(newDiv);
+            }
+            else if(date[0] >= dateFrom && date[0] <= dateTo){
+              found = true;
+              document.getElementById("footer").style.display = "block";
+              newDiv.innerHTML = `
+              <div class="card border-primary mb-3">
+                <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                <h6 class="card-header">`+ doc.data().name + `</h6>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
+                </ul>
+                <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+              </div>`;
+              document.getElementById('eventList').appendChild(newDiv);
+            }
           } 
-        }
-        else{
-          if(doc.data().name == eventname){
-            found = true;
-            newDiv.innerHTML = `
-            <div class="card border-primary mb-3">
-              <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-              <h6 class="card-header">`+ doc.data().name + `</h6>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
-              </ul>
-              <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-            </div>`;
-            document.getElementById('eventList').appendChild(newDiv);
-          }
-          else if(date[0] >= dateFrom && date[0] <= dateTo){
-            found = true;
-            document.getElementById("footer").style.display = "block";
-            newDiv.innerHTML = `
-            <div class="card border-primary mb-3">
-              <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-              <h6 class="card-header">`+ doc.data().name + `</h6>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="bold underline">Please login to do actions</span></li>
-              </ul>
-              <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-            </div>`;
-            document.getElementById('eventList').appendChild(newDiv);
-          }
         }      
       });
       if(!found){

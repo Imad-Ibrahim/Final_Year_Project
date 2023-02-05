@@ -51,3 +51,8 @@ This is all my work for my final year project (FYP).
 ## Version11 :smiley:
 - Logo added.
 - Fixed few bugs.
+
+## Version12 :smiley:
+- Added rate driver option.
+- Drivers who have their rate between 0 and 1.9 stars, they will NOT match with any passengers.
+- Fixed few bugs.

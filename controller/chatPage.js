@@ -2,6 +2,9 @@ import db from "./firebaseConfig.js";
 import { encrypt } from "./config.js"
 
 let current_chat_driver = "";
+let rateDriverId = "";
+let ratePassengerId = "";
+let theEventId = "";
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -29,23 +32,51 @@ function populateEvents() {
                         }
                         db.collection('events').doc(element.eventId).get().then((doc) => {
                             if (doc.exists) {
-                                document.getElementById("attending").style.display = "block";
-                                document.getElementById('noneToDisplay').style.display = "none"; 
-                                let panel = document.createElement('div');
-                                panel.className = 'col-md-4 mx-auto';
-                                panel.innerHTML = `
-                                <div class="card border-primary mb-3">
-                                    <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-                                    <h6 class="card-header">`+ doc.data().name + `</h6>
-                                    <div class="card-body">
-                                        <ul class="list-group list-group-flush">
-                                            <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
-                                            <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat();">` + user_name + `</button>
-                                        </ul>
-                                    </div>
-                                    <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-                                </div>`;
-                                document.getElementById('attending_panels').appendChild(panel);
+                                let date = doc.data().date_time.split(" ");
+                                let currentDate = new Date();
+                                currentDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+                                if(date[0] >= currentDate){
+                                    document.getElementById("attending").style.display = "block";
+                                    document.getElementById('noneToDisplay').style.display = "none"; 
+                                    let panel = document.createElement('div');
+                                    panel.className = 'col-md-4 mx-auto';
+                                    panel.innerHTML = `
+                                    <div class="card border-primary mb-3">
+                                        <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                                        <h6 class="card-header">`+ doc.data().name + `</h6>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
+                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+                                    </div>`;
+                                    document.getElementById('attending_panels').appendChild(panel);
+                                } 
+                                else{
+                                    document.getElementById("attended").style.display = "block";
+                                    document.getElementById('noneToDisplay').style.display = "none";
+                                    let panel = document.createElement('div');
+                                    panel.className = 'col-md-4 mx-auto';
+                                    panel.innerHTML = `
+                                    <div class="card border-primary mb-3">
+                                        <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                                        <h6 class="card-header">`+ doc.data().name + `</h6>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
+                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <br><span style="text-align: center; color: white;" class="bold">Rate Your Driver </span>
+                                                <button class="btn btn-outline-primary" id=`+ element.driver + ` onclick="setDriverId(this.id); closeRate(); setEventId('`+ element.eventId +`');"> Rate </button>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+                                    </div>`;
+                                    document.getElementById('attended_panels').appendChild(panel);
+                                    document.getElementById("sendBtn").style.display = "none";
+                                    document.getElementById("messageText").disabled = true;
+                                }                               
                             }
                         }).catch((error) => {
                             alert("Error getting document.");
@@ -68,23 +99,49 @@ function populateEvents() {
                         }
                         db.collection('events').doc(element.eventId).get().then((doc) => {
                             if (doc.exists) {
-                                document.getElementById("driving").style.display = "block";
-                                document.getElementById('noneToDisplay').style.display = "none";
-                                let panel = document.createElement('div');
-                                panel.className = 'col-md-4 mx-auto';
-                                panel.innerHTML = `
-                                <div class="card border-primary mb-3">
-                                    <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
-                                    <h6 class="card-header">`+ doc.data().name + `</h6>
-                                    <div class="card-body">
-                                        <ul class="list-group list-group-flush">
-                                            <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
-                                            <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat();">` + user_name + `</button>
-                                        </ul>
-                                    </div>
-                                    <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
-                                </div>`;
-                                document.getElementById('driving_panels').appendChild(panel);
+                                let date = doc.data().date_time.split(" ");
+                                let currentDate = new Date();
+                                currentDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
+                                if(date[0] >= currentDate){
+                                    document.getElementById("driving").style.display = "block";
+                                    document.getElementById('noneToDisplay').style.display = "none";
+                                    let panel = document.createElement('div');
+                                    panel.className = 'col-md-4 mx-auto';
+                                    panel.innerHTML = `
+                                    <div class="card border-primary mb-3">
+                                        <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                                        <h6 class="card-header">`+ doc.data().name + `</h6>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
+                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+                                    </div>`;
+                                    document.getElementById('driving_panels').appendChild(panel);
+                                }
+                                else{
+                                    document.getElementById("attended").style.display = "block";
+                                    document.getElementById('noneToDisplay').style.display = "none";
+                                    let panel = document.createElement('div');
+                                    panel.className = 'col-md-4 mx-auto';
+                                    panel.innerHTML = `
+                                    <div class="card border-primary mb-3">
+                                        <img src=`+ doc.data().photo + ` alt=` + doc.data().name + `>
+                                        <h6 class="card-header">`+ doc.data().name + `</h6>
+                                        <div class="card-body">
+                                            <ul class="list-group list-group-flush">
+                                                <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
+                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                            </ul>
+                                        </div>
+                                        <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
+                                    </div>`;
+                                    document.getElementById('attended_panels').appendChild(panel);
+                                    document.getElementById("sendBtn").style.display = "none";
+                                    document.getElementById("messageText").disabled = true;
+                                }
                             }
                         }).catch((error) => {
                             alert("Error getting document.");
@@ -133,7 +190,7 @@ function openChat(driverId) {
         .get()
         .then((doc) => {
             if (doc.exists) {
-                filteredUserMessages = doc.data().messages.filter(obj => obj.to == driverId);
+                filteredUserMessages = doc.data().messages.filter(obj => obj.to == driverId && obj.eventId == theEventId);
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -147,7 +204,7 @@ function openChat(driverId) {
         if (doc.exists) {
             document.getElementById('chatMessages').innerHTML = '';
             let messagesFromDriver = doc.data().messages;
-            filteredDriverMessages = messagesFromDriver.filter(obj => obj.to == firebase.auth().currentUser.uid);
+            filteredDriverMessages = messagesFromDriver.filter(obj => obj.to == firebase.auth().currentUser.uid && obj.eventId == theEventId);
             let allMessagesUnsorted = filteredDriverMessages.concat(filteredUserMessages);
             let allMessages = allMessagesUnsorted.sort((a, b) => a.time.seconds - b.time.seconds);
             for (let i = 0; i < allMessages.length; i++) {
@@ -185,7 +242,8 @@ function sendChat(driverId) {
                     from: firebase.auth().currentUser.uid,
                     to: driverId,
                     time: firebase.firestore.Timestamp.now(),
-                    message: CryptoJS.AES.encrypt(document.getElementById("messageText").value, encrypt).toString()
+                    message: CryptoJS.AES.encrypt(document.getElementById("messageText").value, encrypt).toString(),
+                    eventId: theEventId
                 })
             });
 
@@ -194,7 +252,8 @@ function sendChat(driverId) {
                     from: firebase.auth().currentUser.uid,
                     to: driverId,
                     time: firebase.firestore.Timestamp.now(),
-                    message: CryptoJS.AES.encrypt(document.getElementById("messageText").value, encrypt).toString()
+                    message: CryptoJS.AES.encrypt(document.getElementById("messageText").value, encrypt).toString(),
+                    eventId: theEventId
                 })
             });
             openChat(driverId);
@@ -202,7 +261,7 @@ function sendChat(driverId) {
             const textarea = document.getElementById('messageText');
             textarea.value = '';
         } else {
-            // doc.data() will be undefined in this case
+            alert("Something went wrong.");
             console.log("No such document!");
         }
     }).catch((error) => {
@@ -211,3 +270,83 @@ function sendChat(driverId) {
     });
 }
 window.sendChat = sendChat
+
+function setDriverId(driverId) {
+    rateDriverId = driverId;
+}
+window.setDriverId = setDriverId;
+
+function setPassengerId(passengerId) {
+    ratePassengerId = passengerId;
+}
+window.setPassengerId = setPassengerId;
+
+function setEventId(eventId) {
+    theEventId = eventId;
+}
+window.setEventId = setEventId;
+
+function closeRate() {
+    if (document.getElementById('rate').style.display == 'block') {
+        document.getElementById("rate").style.display = "none";
+    }
+    else {
+        document.getElementById("rate").style.display = "block";
+    }
+}
+window.closeRate = closeRate;
+
+function addRate() {
+    let rate = document.getElementById("rateInput").value;
+    if(rate > 0 && rate < 6){
+        db.collection('users').doc(rateDriverId).get().then((doc) => {
+            if (doc.exists) {
+                let rateNum, allRates;
+                let rated = false, firstRate = false;
+                if(!doc.data().ratedEvent){
+                    firstRate = true;
+                }
+                else{
+                    for(let i=0; i<doc.data().ratedEvent.length; i++){
+                        if(doc.data().ratedEvent[i].eventId == theEventId)
+                            rated = true;
+                    }
+                }
+                if(!rated || firstRate){
+                    if (isNaN(doc.data().numberOfRates)){
+                        rateNum = parseFloat(1);
+                        allRates = parseFloat(rate);
+                    }
+                    else{
+                        rateNum = parseFloat(doc.data().numberOfRates) + 1;
+                        allRates = parseFloat(doc.data().rateTotal) + parseFloat(rate);
+                    }
+                    let avgRounded = Math.round((allRates / rateNum) * 100) / 100;                    
+                    db.collection('users').doc(rateDriverId).update({
+                        ratedEvent: firebase.firestore.FieldValue.arrayUnion({
+                            eventId: theEventId
+                        }),
+                        driverRate: avgRounded,
+                        numberOfRates: rateNum,
+                        rateTotal: allRates
+                    });
+                    alert("Thanks for the rate.");
+                }
+                else{
+                   alert("You have reated this driver for this event.");
+                }      
+                document.getElementById("rateInput").value = "";          
+            } else {
+                alert("Something went wrong.");
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            alert("Something went wrong.");
+            console.log("No such document! ", error);
+        });
+    }
+    else{
+        alert("Please enter rate range between 1 and 5");
+    }
+}
+window.addRate = addRate;
