@@ -3,21 +3,10 @@ import sendMail from "./sendEmail.js"
 import { positionStackAPI } from "./config.js";
 
 let loggedIn = false;
-let impactCollection = [];
 
 firebase.auth().onAuthStateChanged(function (user) {
   if(window.location.pathname == "/view/index.html"){
     getEmissions();
-    setTimeout(() => {
-      if (isNaN(impactCollection)){
-        let result = ((impactCollection[1] + impactCollection[2] + impactCollection[3]) * 5) / 3;
-        let avg = Math.round(result * 100) / 100;
-        if(avg > 0){
-          document.getElementById("emissionImpact").innerHTML = avg;
-          document.getElementById("averageTitle").style.display = "block";
-        }
-      }
-    }, 3500);
   }
   if (user) {
     // User is signed in.
@@ -510,25 +499,21 @@ function clearSearch(){
 window.clearSearch = clearSearch;
 
 function getEmissions(){
-  let none = 0, low = 0, medium = 0, high = 0;
-  db.collection("events").get().then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {        
-      if(doc.data().drivers.length != 0){
-        for(let i = 0; i < doc.data().drivers.length; i++){
-          if(doc.data().drivers[i].impact == "NONE")
-            none++;
-          else if(doc.data().drivers[i].impact == "LOW")
-            low++;
-          else if(doc.data().drivers[i].impact == "MEDIUM")
-            medium++;
-          else if(doc.data().drivers[i].impact == "HIGH")
-            high++;
-        }
-      }
+  let carsReduced = 0, eventsAttended = 0;
+  db.collection("users").get().then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {         
+      eventsAttended += (doc.data().eventsAttended.length)
     });
-    impactCollection[0] = none;
-    impactCollection[1] = low;
-    impactCollection[2] = medium;
-    impactCollection[3] = high;
+    if(eventsAttended > 0 && eventsAttended <= 4)
+      carsReduced = 1;
+    else if(eventsAttended > 4){
+      carsReduced = eventsAttended / 4;
+      if(carsReduced % 1 != 0)
+        carsReduced = (parseInt(carsReduced % 10)) + 1
+    }
+    else
+      carsReduced = 0;
+    document.getElementById("emissionImpact").innerHTML = eventsAttended - carsReduced;  
+    document.getElementById("averageTitle").style.display = "block";
   });  
 }

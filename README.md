@@ -56,3 +56,6 @@ This is all my work for my final year project (FYP).
 - Added rate driver option.
 - Drivers who have their rate between 0 and 1.9 stars, they will NOT match with any passengers.
 - Fixed few bugs.
+
+## Version13 :smiley:
+- Cars reduced on road calculation.
