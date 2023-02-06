@@ -59,3 +59,6 @@ This is all my work for my final year project (FYP).
 
 ## Version13 :smiley:
 - Cars reduced on road calculation.
+
+## Version14 :smiley:
+- Fixed few bugs.

@@ -1,10 +1,9 @@
 import db from "./firebaseConfig.js";
 import { encrypt } from "./config.js"
 
-let current_chat_driver = "";
-let rateDriverId = "";
-let ratePassengerId = "";
-let theEventId = "";
+let current_chat_driver = "", rateDriverId = "", theEventId = "";
+let previousChat = false;
+let message_count = 0;
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -37,7 +36,7 @@ function populateEvents() {
                                 currentDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + String(currentDate.getDate()).padStart(2, '0');
                                 if(date[0] >= currentDate){
                                     document.getElementById("attending").style.display = "block";
-                                    document.getElementById('noneToDisplay').style.display = "none"; 
+                                    document.getElementById('noneToDisplay').style.display = "none";
                                     let panel = document.createElement('div');
                                     panel.className = 'col-md-4 mx-auto';
                                     panel.innerHTML = `
@@ -66,7 +65,7 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setPreviousChat('`+ true +`'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                                 <br><span style="text-align: center; color: white;" class="bold">Rate Your Driver </span>
                                                 <button class="btn btn-outline-primary" id=`+ element.driver + ` onclick="setDriverId(this.id); closeRate(); setEventId('`+ element.eventId +`');"> Rate </button>
                                             </ul>
@@ -74,8 +73,6 @@ function populateEvents() {
                                         <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
                                     </div>`;
                                     document.getElementById('attended_panels').appendChild(panel);
-                                    document.getElementById("sendBtn").style.display = "none";
-                                    document.getElementById("messageText").disabled = true;
                                 }                               
                             }
                         }).catch((error) => {
@@ -133,14 +130,12 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setPreviousChat('`+ true +`'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                             </ul>
                                         </div>
                                         <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
                                     </div>`;
                                     document.getElementById('attended_panels').appendChild(panel);
-                                    document.getElementById("sendBtn").style.display = "none";
-                                    document.getElementById("messageText").disabled = true;
                                 }
                             }
                         }).catch((error) => {
@@ -171,16 +166,19 @@ function closeChat() {
 }
 window.closeChat = closeChat;
 
-let message_count = 0;
-function openChat(driverId) {
+function setPreviousChat(status) {
+    previousChat = status;
+}
+window.setPreviousChat = setPreviousChat;
 
+function openChat(driverId) {
     db.collection('users').doc(firebase.auth().currentUser.uid).onSnapshot((doc) => {
         if (message_count < doc.data().messages.length) {
             message_count = doc.data().messages.length;
             openChat(current_chat_driver);
         }
     });
-    
+
     current_chat_driver = driverId;
     let filteredDriverMessages = [];
     let filteredUserMessages = [];
@@ -226,6 +224,16 @@ function openChat(driverId) {
             // doc.data() will be undefined in this case
             console.log("No such document!");
         }
+        
+        if(previousChat){
+            document.getElementById("sendBtn").style.display = "none";
+            document.getElementById("messageText").disabled = true;
+            previousChat = false;
+        }
+        else{
+            document.getElementById("sendBtn").style.display = "block";
+            document.getElementById("messageText").disabled = false;
+        }
     }).catch((error) => {
         alert("Something went wrong.");
         console.log(error);
@@ -269,17 +277,12 @@ function sendChat(driverId) {
         console.log("No such document! ", error);
     });
 }
-window.sendChat = sendChat
+window.sendChat = sendChat;
 
 function setDriverId(driverId) {
     rateDriverId = driverId;
 }
 window.setDriverId = setDriverId;
-
-function setPassengerId(passengerId) {
-    ratePassengerId = passengerId;
-}
-window.setPassengerId = setPassengerId;
 
 function setEventId(eventId) {
     theEventId = eventId;
