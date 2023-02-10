@@ -10,10 +10,14 @@ firebase.auth().onAuthStateChanged(function (user) {
         // User is signed in.
         document.getElementById("username").innerHTML = "Hey " + firebase.auth().currentUser.displayName;
         document.getElementById('noneToDisplay').innerHTML = "Loading...";
+        document.getElementById('noAccess').style.display = "none";
         populateEvents();
         setTimeout(() => {
             document.getElementById('noneToDisplay').innerHTML = "It looks like your chat page is empty.";
         }, 3500); 
+    }
+    else{
+        document.getElementById('noAccess').innerHTML = "You don't have permission to access this page, please login.";
     }
 });
 

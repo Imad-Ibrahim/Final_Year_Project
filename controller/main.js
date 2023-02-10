@@ -10,11 +10,19 @@ firebase.auth().onAuthStateChanged(function (user) {
   }
   if (user) {
     // User is signed in.
+    loggedIn = true;
     document.getElementById("username").innerHTML = "Hey " + firebase.auth().currentUser.displayName;
     document.getElementById("signOut").style.display = "block";
     document.getElementById("chat").style.display = "block";
     document.getElementById("signIn").style.display = "none";
-    loggedIn = true;
+    if(window.location.pathname == "/view/RegisterDriver.html"){
+      document.getElementById("noAccess").style.display = "none";
+      document.getElementById("driverForm").style.display = "block";
+    }
+    if(window.location.pathname == "/view/RegisterPassenger.html"){
+      document.getElementById("noAccess").style.display = "none";
+      document.getElementById("passengerForm").style.display = "block";
+    }
     if(window.location.pathname == "/view/index.html"){
       document.getElementById('loading').innerHTML = "Loading...";
       displayEvents();
@@ -48,6 +56,15 @@ firebase.auth().onAuthStateChanged(function (user) {
     document.getElementById("signIn").style.display = "block";
     document.getElementById("signOut").style.display = "none";
     document.getElementById("chat").style.display = "none";
+    if(window.location.pathname == "/view/RegisterDriver.html"){
+      document.getElementById("driverForm").style.display = "none";
+      document.getElementById('noAccess').innerHTML = "You don't have permission to access this page, please login.";
+    }
+
+    if(window.location.pathname == "/view/RegisterPassenger.html"){
+      document.getElementById("passengerForm").style.display = "none";
+      document.getElementById('noAccess').innerHTML = "You don't have permission to access this page, please login.";
+    }
   }
 });
 
