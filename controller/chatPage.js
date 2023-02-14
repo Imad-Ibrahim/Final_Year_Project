@@ -1,8 +1,7 @@
 import db from "./firebaseConfig.js";
 import { encrypt } from "./config.js"
 
-let current_chat_driver = "", rateDriverId = "", theEventId = "";
-let previousChat = false;
+let current_chat_driver = "", rateDriverId = "", theEventId = "", previousChat = "";
 let message_count = 0;
 
 firebase.auth().onAuthStateChanged(function (user) {
@@ -50,7 +49,7 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setPreviousChat('false'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                             </ul>
                                         </div>
                                         <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
@@ -69,7 +68,7 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Driver Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setPreviousChat('`+ true +`'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.driver + `  onclick="openChat(this.id); closeChat(); setPreviousChat('true'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                                 <br><span style="text-align: center; color: white;" class="bold">Rate Your Driver </span>
                                                 <button class="btn btn-outline-primary" id=`+ element.driver + ` onclick="setDriverId(this.id); closeRate(); setEventId('`+ element.eventId +`');"> Rate </button>
                                             </ul>
@@ -115,7 +114,7 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat();  setPreviousChat('false'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                             </ul>
                                         </div>
                                         <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
@@ -134,7 +133,7 @@ function populateEvents() {
                                         <div class="card-body">
                                             <ul class="list-group list-group-flush">
                                                 <span style="text-align: center; color: white;" class="bold">Your Passenger Chat </span>
-                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setPreviousChat('`+ true +`'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
+                                                <button class="btn btn-outline-success" id=`+ element.passengerId + `  onclick="openChat(this.id); closeChat(); setPreviousChat('true'); setEventId('`+ element.eventId +`');">` + user_name + `</button>
                                             </ul>
                                         </div>
                                         <div class="card-footer text-muted">`+ doc.data().date_time + `</div>
@@ -228,11 +227,9 @@ function openChat(driverId) {
             // doc.data() will be undefined in this case
             console.log("No such document!");
         }
-        
-        if(previousChat){
+        if(previousChat == "true"){
             document.getElementById("sendBtn").style.display = "none";
             document.getElementById("messageText").disabled = true;
-            previousChat = false;
         }
         else{
             document.getElementById("sendBtn").style.display = "block";
