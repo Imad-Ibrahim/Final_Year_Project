@@ -3,6 +3,7 @@ import sendMail from "./sendEmail.js"
 import { positionStackAPI } from "./config.js";
 
 let loggedIn = false;
+const numberRegularExpression = /^[^0-9]*$/;
 
 firebase.auth().onAuthStateChanged(function (user) {
   if(window.location.pathname == "/view/index.html"){
@@ -45,6 +46,10 @@ firebase.auth().onAuthStateChanged(function (user) {
       }
     }).catch((error) => {
       alert("Error getting document for user sign up/sign in");
+    });
+
+    window.addEventListener('unload', function() {
+      firebase.auth().signOut().then(function() {});
     });
   } else {
     // No user is signed in.
@@ -115,20 +120,31 @@ function sendComments(){
   let email = document.getElementById('email').value;
   let comments = document.getElementById('comments').value;
   if(name.length > 0 && email.length > 0 && comments.length > 0){
-    if(loggedIn){
-      db.collection('comments').doc(firebase.auth().currentUser.uid).set({
-        name: name,
-        email: email,
-        comments: comments
-      });
-      alert("Successfully sent");
-      document.getElementById('contactUsForm').reset();
+    const emailRegularExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(numberRegularExpression.test(name)){
+      if(emailRegularExpression.test(email)){
+        if(loggedIn){
+          db.collection('comments').doc(firebase.auth().currentUser.uid).set({
+            name: name,
+            email: email,
+            comments: comments
+          });
+          alert("Successfully sent");
+          document.getElementById('contactUsForm').reset();
+        }
+        else{
+          alert("Please login first");
+        }
+      }
+      else{
+        alert("Invalid Email.");
+      }
     }
     else{
-      alert("Please login first");
+      alert("Something went wrong.\nName must NOT contains any number.");
     }
   }else{
-    alert("All fields are required");
+    alert("All fields are required.");
   }
 }
 window.sendComments = sendComments;
@@ -322,24 +338,29 @@ async function registerPassenger() {
   var passengerCountry;
 
   if (city.length > 0 && county.length > 0){
-    $.ajax({
-      url: url,
-      complete: function (data) {
-        passengerLatitude = data.responseJSON.data[0].latitude;
-        passengerLongitude = data.responseJSON.data[0].longitude;
-        passengerCountry = data.responseJSON.data[0].country;
-        if (passengerCountry == 'Ireland') {
-          if(passengerKmRange.length == 0)
-            passengerKmRange = 50;
-          matchDriver(passengerLatitude, passengerLongitude, getSelectedEventID(), 15, passengerKmRange);
-        }
-        else
-          alert("Wrong address, the address you entered does not exists!!!");
-      },
-    }).catch((error) => {
-      alert("Something went wrong.");
-      console.log(error);
-    });
+    if(numberRegularExpression.test(city) && numberRegularExpression.test(county)){
+      $.ajax({
+        url: url,
+        complete: function (data) {
+          passengerLatitude = data.responseJSON.data[0].latitude;
+          passengerLongitude = data.responseJSON.data[0].longitude;
+          passengerCountry = data.responseJSON.data[0].country;
+          if (passengerCountry == 'Ireland') {
+            if(passengerKmRange.length == 0)
+              passengerKmRange = 50;
+            matchDriver(passengerLatitude, passengerLongitude, getSelectedEventID(), 15, passengerKmRange);
+          }
+          else
+            alert("Wrong address, the address you entered does not exists!!!");
+        },
+      }).catch((error) => {
+        alert("Something went wrong.");
+        console.log(error);
+      });
+    }
+    else{
+      alert("Something went wrong.\n\nCity/Town and County must NOT contains any number.");
+    }
   }else
     alert("All fields must be filled out!!!");
 }
@@ -365,33 +386,44 @@ function registerDriver() {
   var driverCountry;
   carYear = parseInt(carYear);
   if(carReg.length > 0 && city.length > 0 && county.length > 0 && meetingPoint.length > 0 && numSeats.length > 0){
-    $.ajax({
-      url: url,
-      complete: function (data) {
-        driverLatitude = data.responseJSON.data[0].latitude;
-        driverLongitude = data.responseJSON.data[0].longitude;
-        driverCountry = data.responseJSON.data[0].country;        
-        if (driverCountry == 'Ireland') {
-          if (electric.checked)
-            impact = "NONE";
-          else {
-            if (carYear >= 15)
-              impact = "LOW";
-            else if (carYear >= 8 && carYear < 15)
-              impact = "MEDIUM";
-            else
-              impact = "HIGH";
-          }
-          addDriver(address, username, getSelectedEventID(), firebase.auth().currentUser.uid, driverLatitude, driverLongitude, carReg, meetingPoint, numSeats, impact); 
-        }
-        else {
-          alert("Wrong address, the address you entered does not exists.");
-        }
-      },
-    }).catch((error) => {
-      alert("Something went wrong.");
-      console.log(error);
-    });
+    const irishRegularExpressionFormat = /^([1-9]|[1-9]\d|[1-9]\d\d|\d[1-9]|[1-9]\d\d\d|\d[1-9]\d\d|[1-9]\d\d[1-9]|[1-9]\d[1-9]\d\d|[1-9][1-9]\d[1-9]|[1-9]\d[1-9][1-9])-(C|CE|CN|CW|D|DL|G|KE|KK|KY|L|LD|LH|LK|LM|LS|MH|MN|MO|OY|RN|SO|T|W|WD|WH|WX|WW|Y|KE|WX|MH)-\d{1,5}$/;
+    if(irishRegularExpressionFormat.test(carReg.toUpperCase())){
+      if(numberRegularExpression.test(city) && numberRegularExpression.test(county) && numberRegularExpression.test(meetingPoint) && numSeats > 0){
+        $.ajax({
+          url: url,
+          complete: function (data) {
+            driverLatitude = data.responseJSON.data[0].latitude;
+            driverLongitude = data.responseJSON.data[0].longitude;
+            driverCountry = data.responseJSON.data[0].country;        
+            if (driverCountry == 'Ireland') {
+              if (electric.checked)
+                impact = "NONE";
+              else {
+                if (carYear >= 15)
+                  impact = "LOW";
+                else if (carYear >= 8 && carYear < 15)
+                  impact = "MEDIUM";
+                else
+                  impact = "HIGH";
+              }
+              addDriver(address, username, getSelectedEventID(), firebase.auth().currentUser.uid, driverLatitude, driverLongitude, carReg, meetingPoint, numSeats, impact); 
+            }
+            else {
+              alert("Wrong address, the address you entered does not exists.");
+            }
+          },
+        }).catch((error) => {
+          alert("Something went wrong.");
+          console.log(error);
+        });
+      }
+      else{
+        alert("Something went wrong.\n\nCity/Town, County and Meeting Point must NOT contains any number.\nOR\nNumber of seats free must be grater then 0");
+      }
+    }
+    else{
+      alert("Invalid Car Registration, eg: (08-D-23337).");
+    }
   }
   else{
     alert("All fields must be filled out!!!");

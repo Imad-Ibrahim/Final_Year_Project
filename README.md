@@ -66,3 +66,11 @@ This is all my work for my final year project (FYP).
 ## Version16 :smiley:
 - Fixed some bugs.
 
+## Version17 :smiley:
+- Log out automatically after closing the browser.
+- Check for valid car registration number.
+- city/county fields cannot contains numbers.
+- Number of free seats must be grather than 0.
+- Check for valid email address.
+
+

@@ -14,6 +14,9 @@ firebase.auth().onAuthStateChanged(function (user) {
         setTimeout(() => {
             document.getElementById('noneToDisplay').innerHTML = "It looks like your chat page is empty.";
         }, 3500); 
+        window.addEventListener('unload', function() {
+            firebase.auth().signOut().then(function() {});
+        });
     }
     else{
         document.getElementById('noAccess').innerHTML = "You don't have permission to access this page, please login.";
