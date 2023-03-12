@@ -551,14 +551,14 @@ function getEmissions(){
   let carsReduced = 0, eventsAttended = 0;
   db.collection("users").get().then((querySnapshot) => {
     querySnapshot.forEach((doc) => {         
-      eventsAttended += (doc.data().eventsAttended.length)
+      eventsAttended += (doc.data().eventsAttended.length);
     });
     if(eventsAttended > 0 && eventsAttended <= 4)
       carsReduced = 1;
     else if(eventsAttended > 4){
       carsReduced = eventsAttended / 4;
       if(carsReduced % 1 != 0)
-        carsReduced = (parseInt(carsReduced % 10)) + 1
+        carsReduced = (parseInt(carsReduced % 10)) + 1;
     }
     else
       carsReduced = 0;
