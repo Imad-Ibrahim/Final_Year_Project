@@ -75,3 +75,8 @@ This is all my work for my final year project (FYP).
 
 ## Version18 :smiley:
 - Fixed some bugs.
+
+## Version19 :smiley:
+- I have changed the county feild form text box to drop down menu.
+- I have fixed Driver/Passenger registration duplicate.
+- Fixed some simple bugs.

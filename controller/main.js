@@ -7,7 +7,7 @@ const numberRegularExpression = /^[^0-9]*$/;
 
 firebase.auth().onAuthStateChanged(function (user) {
   if(window.location.pathname == "/view/index.html"){
-    getEmissions();
+    getCarsReduced();
   }
   if (user) {
     // User is signed in.
@@ -19,10 +19,12 @@ firebase.auth().onAuthStateChanged(function (user) {
     if(window.location.pathname == "/view/RegisterDriver.html"){
       document.getElementById("noAccess").style.display = "none";
       document.getElementById("driverForm").style.display = "block";
+      populateOptionsOfSelectElement();
     }
     if(window.location.pathname == "/view/RegisterPassenger.html"){
       document.getElementById("noAccess").style.display = "none";
       document.getElementById("passengerForm").style.display = "block";
+      populateOptionsOfSelectElement();
     }
     if(window.location.pathname == "/view/index.html"){
       document.getElementById('loading').innerHTML = "Loading...";
@@ -150,13 +152,21 @@ function sendComments(){
 window.sendComments = sendComments;
 
 function addDriver(address, username, eventId, driverId, driverLat, driverLon, driverReg, meetingPoint, numSeats, impact) {
-  db.collection('events').doc(eventId).get().then((doc) => {
-    if (doc.exists) {
-      if (doc.data().drivers.some(driver => driver.driverId === driverId)) {
-        alert("Already Driving to the event.")
+  db.collection('events').doc(eventId).get().then((event) => {
+    if (event.exists) {
+      if (event.data().drivers.some(driver => driver.driverId === driverId)) {
+        alert("Already Driving to the event.");
       } else {
         let dRate;        
-        db.collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {
+        db.collection('users').doc(firebase.auth().currentUser.uid).get().then((doc) => {          
+          if(event.data().drivers.length > 0){
+            for(let i = 0; event.data().drivers; i++){
+              if(event.data().drivers[i].driverId != firebase.auth().currentUser.uid){
+                alert("You are already a Passenger to the event.");
+                return null;
+              }
+            }
+          }
           dRate = doc.data().driverRate;
           db.collection('events').doc(eventId).update({
             drivers: firebase.firestore.FieldValue.arrayUnion({
@@ -172,10 +182,10 @@ function addDriver(address, username, eventId, driverId, driverLat, driverLon, d
               impact: impact,
               driverRate: parseFloat(dRate)
             })
-          });
+          }); 
+          alert("Thanks for signing on to our platform! please keep an eye on your email and chat for further notifications.");         
+          document.getElementById('registerDriverForm').reset();
         });
-        alert("Thanks for signing on to our platform! please keep an eye on your email and chat for further notifications.");
-        document.getElementById('registerDriverForm').reset();
       }
     } else {
       // doc.data() will be undefined in this case
@@ -221,6 +231,7 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
     if (doc.exists) {
       if (doc.data().eventsAttended.some(e => e.eventId === eventId)) {
         alert("You Are already going to this event.");
+        return null;
       }
       else {
         //get document
@@ -329,7 +340,7 @@ function distanceCalculation(lat1, lat2, lon1, lon2) {
 
 async function registerPassenger() {
   var city = document.getElementById("passengerCity").value;
-  var county = document.getElementById("passengerCounty").value;
+  var county = document.getElementById("county").value;
   var passengerKmRange = document.getElementById("maxKmRange").value;
   var address = city + ", " + county;
   var url = 'http://api.positionstack.com/v1/forward?access_key=' + positionStackAPI + '&query=' + address;
@@ -359,7 +370,7 @@ async function registerPassenger() {
       });
     }
     else{
-      alert("Something went wrong.\n\nCity/Town and County must NOT contains any number.");
+      alert("Something went wrong.\n\nCity/Town must NOT contains any number.");
     }
   }else
     alert("All fields must be filled out!!!");
@@ -373,7 +384,7 @@ function getSelectedEventID(){
 function registerDriver() {
   var carReg = document.getElementById("driverCarReg").value;
   var city = document.getElementById("driverCity").value;
-  var county = document.getElementById("driverCounty").value;
+  var county = document.getElementById("county").value;
   var meetingPoint = document.getElementById("driverMeetingPoint").value;
   var numSeats = document.getElementById("driverNumSeats").value;
   var address = city + ", " + county;
@@ -418,7 +429,7 @@ function registerDriver() {
         });
       }
       else{
-        alert("Something went wrong.\n\nCity/Town, County and Meeting Point must NOT contains any number.\nOR\nNumber of seats free must be grater then 0");
+        alert("Something went wrong.\n\nCity/Town and Meeting Point must NOT contains any number.\nOR\nNumber of seats free must be grater then 0");
       }
     }
     else{
@@ -547,7 +558,7 @@ function clearSearch(){
 }
 window.clearSearch = clearSearch;
 
-function getEmissions(){
+function getCarsReduced(){
   let carsReduced = 0, eventsAttended = 0;
   db.collection("users").get().then((querySnapshot) => {
     querySnapshot.forEach((doc) => {         
@@ -565,4 +576,42 @@ function getEmissions(){
     document.getElementById("emissionImpact").innerHTML = eventsAttended - carsReduced;  
     document.getElementById("averageTitle").style.display = "block";
   });  
+}
+
+function populateOptionsOfSelectElement(){
+  const selectElement = document.getElementById("county");
+  const counties = [
+    { value: "carlow", text: "Carlow" },
+    { value: "cavan", text: "Cavan" },
+    { value: "clare", text: "Clare" },
+    { value: "cork", text: "Cork" },
+    { value: "donegal", text: "Donegal" },
+    { value: "dublin", text: "Dublin" },
+    { value: "galway", text: "Galway" },
+    { value: "kerry", text: "Kerry" },
+    { value: "kildare", text: "Kildare" },
+    { value: "kilkenny", text: "Kilkenny" },
+    { value: "laois", text: "Laois" },
+    { value: "leitrim", text: "Leitrim" },
+    { value: "limerick", text: "Limerick" },
+    { value: "longford", text: "Longford" },
+    { value: "mayo", text: "Mayo" },
+    { value: "meath", text: "Meath" },
+    { value: "monaghan", text: "Monaghan" },
+    { value: "offaly", text: "Offaly" },
+    { value: "roscommon", text: "Roscommon" },
+    { value: "sligo", text: "Sligo" },
+    { value: "tipperary", text: "Tipperary" },
+    { value: "waterford", text: "Waterford" },
+    { value: "westmeath", text: "Westmeath" },
+    { value: "wexford", text: "Wexford" },
+    { value: "wicklow", text: "Wicklow" },
+  ];
+
+  for (let i = 0; i < counties.length; i++) {
+    const county = document.createElement("option");
+    county.value = counties[i].value;
+    county.text = counties[i].text;
+    selectElement.appendChild(county);
+  }
 }
