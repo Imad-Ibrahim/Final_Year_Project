@@ -31,11 +31,8 @@ firebase.auth().onAuthStateChanged(function (user) {
       displayEvents();
     }
     db.collection("users").doc(firebase.auth().currentUser.uid).get().then((doc) => {
-      if (doc.exists) {
-        console.log("User verified");
-      } else {
+      if (!doc.exists) {
         // doc.data() will be undefined in this case
-        console.log("Created new user account");
         db.collection('users').doc(firebase.auth().currentUser.uid).set({
           name: firebase.auth().currentUser.displayName,
           email: firebase.auth().currentUser.email,
@@ -305,8 +302,7 @@ async function matchDriver(passengerLatitude, passengerLongitude, eventId, maxMa
             return null
           }
         }).catch((error) => {
-          console.log(error)
-          alert("Something went wrong, there is either no driver or no free seats for this event, please try again later....");
+          alert("Something went wrong, there is either no driver or no free seats for this event, please try again later.");
           return null
         });
       }
@@ -353,20 +349,21 @@ async function registerPassenger() {
       $.ajax({
         url: url,
         complete: function (data) {
-          passengerLatitude = data.responseJSON.data[0].latitude;
-          passengerLongitude = data.responseJSON.data[0].longitude;
-          passengerCountry = data.responseJSON.data[0].country;
-          if (passengerCountry == 'Ireland') {
-            if(passengerKmRange.length == 0)
-              passengerKmRange = 50;
-            matchDriver(passengerLatitude, passengerLongitude, getSelectedEventID(), 15, passengerKmRange);
+          if (data.responseJSON && data.responseJSON.data && data.responseJSON.data[0]) {
+            passengerLatitude = data.responseJSON.data[0].latitude;
+            passengerLongitude = data.responseJSON.data[0].longitude;
+            passengerCountry = data.responseJSON.data[0].country;
+            if (passengerCountry == 'Ireland') {
+              if(passengerKmRange.length == 0)
+                passengerKmRange = 50;
+              matchDriver(passengerLatitude, passengerLongitude, getSelectedEventID(), 15, passengerKmRange);
+            }
+            else
+              alert("Wrong address, the address you entered does not exists!!!");
           }
-          else
-            alert("Wrong address, the address you entered does not exists!!!");
         },
       }).catch((error) => {
-        alert("Something went wrong.");
-        console.log(error);
+        alert("An error occurred while processing your request. Please try again later.");
       });
     }
     else{
@@ -403,29 +400,30 @@ function registerDriver() {
         $.ajax({
           url: url,
           complete: function (data) {
-            driverLatitude = data.responseJSON.data[0].latitude;
-            driverLongitude = data.responseJSON.data[0].longitude;
-            driverCountry = data.responseJSON.data[0].country;        
-            if (driverCountry == 'Ireland') {
-              if (electric.checked)
-                impact = "NONE";
-              else {
-                if (carYear >= 15)
-                  impact = "LOW";
-                else if (carYear >= 8 && carYear < 15)
-                  impact = "MEDIUM";
-                else
-                  impact = "HIGH";
+            if (data.responseJSON && data.responseJSON.data && data.responseJSON.data[0]) {
+              driverLatitude = data.responseJSON.data[0].latitude;
+              driverLongitude = data.responseJSON.data[0].longitude;
+              driverCountry = data.responseJSON.data[0].country;        
+              if (driverCountry == 'Ireland') {
+                if (electric.checked)
+                  impact = "NONE";
+                else {
+                  if (carYear >= 15)
+                    impact = "LOW";
+                  else if (carYear >= 8 && carYear < 15)
+                    impact = "MEDIUM";
+                  else
+                    impact = "HIGH";
+                }
+                addDriver(address, username, getSelectedEventID(), firebase.auth().currentUser.uid, driverLatitude, driverLongitude, carReg, meetingPoint, numSeats, impact); 
               }
-              addDriver(address, username, getSelectedEventID(), firebase.auth().currentUser.uid, driverLatitude, driverLongitude, carReg, meetingPoint, numSeats, impact); 
-            }
-            else {
-              alert("Wrong address, the address you entered does not exists.");
-            }
+              else {
+                alert("Wrong address, the address you entered does not exists.");
+              }
+            } 
           },
         }).catch((error) => {
-          alert("Something went wrong.");
-          console.log(error);
+          alert("An error occurred while processing your request. Please try again later.");
         });
       }
       else{

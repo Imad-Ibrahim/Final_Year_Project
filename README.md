@@ -80,3 +80,6 @@ This is all my work for my final year project (FYP).
 - I have changed the county feild form text box to drop down menu.
 - I have fixed Driver/Passenger registration duplicate.
 - Fixed some simple bugs.
+
+## Version20 :smiley:
+- Fixed uncatched error when redistering as a driver or passenger.

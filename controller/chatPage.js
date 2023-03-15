@@ -82,13 +82,11 @@ function populateEvents() {
                                 }                               
                             }
                         }).catch((error) => {
-                            alert("Error getting document.");
-                            console.log("Error getting document:", error);
+                            alert("Error getting event details.");
                         });
                         
                     }).catch((error) => {
-                        alert("Error getting document.");
-                        console.log("Error getting document:", error);
+                        alert("Error getting user details.");
                     });
                 });
             }
@@ -145,19 +143,16 @@ function populateEvents() {
                                 }
                             }
                         }).catch((error) => {
-                            alert("Error getting document.");
-                            console.log("Error getting document:", error);
+                            alert("Error getting event details.");
                         });                            
                     }).catch((error) => {
-                        alert("Error getting document.");
-                        console.log("Error getting document:", error);
+                        alert("Error getting user details.");
                     });
                 });
             }
         }        
     }).catch((error) => {
-        alert("Error getting document.");
-        console.log("Error getting document:", error);
+        alert("Error getting user details.");
     });
 }
 window.populateEvents = populateEvents
@@ -240,7 +235,6 @@ function openChat(driverId) {
         }
     }).catch((error) => {
         alert("Something went wrong.");
-        console.log(error);
     });
 }
 window.openChat = openChat;
@@ -274,11 +268,9 @@ function sendChat(driverId) {
             textarea.value = '';
         } else {
             alert("Something went wrong.");
-            console.log("No such document!");
         }
     }).catch((error) => {
         alert("Something went wrong.");
-        console.log("No such document! ", error);
     });
 }
 window.sendChat = sendChat;
@@ -345,11 +337,9 @@ function addRate() {
                 document.getElementById("rateInput").value = "";          
             } else {
                 alert("Something went wrong.");
-                console.log("No such document!");
             }
         }).catch((error) => {
             alert("Something went wrong.");
-            console.log("No such document! ", error);
         });
     }
     else{

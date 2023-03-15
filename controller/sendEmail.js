@@ -17,7 +17,7 @@ export default function sendMail(driverName, driverEmail, eventName, passengerNa
 
   emailjs.send(emailJS_service_Key, emailJS_Template_Key, templateParams)
     .then(function (response) {
-      console.log('Confirmation email sent successfully', response.status, response.text);
+      alert("Thanks for signing on to our platform! an email has been sent to the driver, please keep an eye on your chat for further notifications.");    
     }, function (error) {
       console.log('Email failed to send', error);
     });
