@@ -82,4 +82,9 @@ This is all my work for my final year project (FYP).
 - Fixed some simple bugs.
 
 ## Version20 :smiley:
-- Fixed uncatched error when redistering as a driver or passenger.
+- Fixed uncatched error when redistering as a driver or passenger
+
+## Version21 :smiley:
+- Web app is now hosted and live.
+- I have fixed paths after hosting it.
+- I have added the https for postionstack which makes it more secure.

@@ -51,7 +51,7 @@ function signOut() {
     .then(function () {
       document.getElementById("signOut").style.display = "none";
       document.getElementById("signIn").style.display = "block";
-      window.location.replace("./index.html"); 
+      window.location.replace("../index.html"); 
     }, function (error) {
       alert("Something went Wrong: " + error.message);
     });

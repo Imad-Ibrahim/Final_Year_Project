@@ -6,7 +6,7 @@ let loggedIn = false;
 const numberRegularExpression = /^[^0-9]*$/;
 
 firebase.auth().onAuthStateChanged(function (user) {
-  if(window.location.pathname == "/view/index.html"){
+  if(window.location.pathname == "/index.html" || window.location.pathname == "/"){
     getCarsReduced();
   }
   if (user) {
@@ -26,7 +26,7 @@ firebase.auth().onAuthStateChanged(function (user) {
       document.getElementById("passengerForm").style.display = "block";
       populateOptionsOfSelectElement();
     }
-    if(window.location.pathname == "/view/index.html"){
+    if(window.location.pathname == "/index.html" || window.location.pathname == "/"){
       document.getElementById('loading').innerHTML = "Loading...";
       displayEvents();
     }
@@ -53,7 +53,7 @@ firebase.auth().onAuthStateChanged(function (user) {
   } else {
     // No user is signed in.
     loggedIn = false;
-    if(window.location.pathname == "/view/index.html"){
+    if(window.location.pathname == "/index.html" || window.location.pathname == "/"){
       document.getElementById('loading').innerHTML = "Loading...";
       displayEvents();
     }
@@ -339,7 +339,7 @@ async function registerPassenger() {
   var county = document.getElementById("county").value;
   var passengerKmRange = document.getElementById("maxKmRange").value;
   var address = city + ", " + county;
-  var url = 'http://api.positionstack.com/v1/forward?access_key=' + positionStackAPI + '&query=' + address;
+  var url = 'https://api.positionstack.com/v1/forward?access_key=' + positionStackAPI + '&query=' + address;
   var passengerLatitude;
   var passengerLongitude;
   var passengerCountry;
@@ -386,7 +386,7 @@ function registerDriver() {
   var numSeats = document.getElementById("driverNumSeats").value;
   var address = city + ", " + county;
   var username = firebase.auth().currentUser.displayName;
-  var url = 'http://api.positionstack.com/v1/forward?access_key=' + positionStackAPI + '&query=' + address;
+  var url = 'https://api.positionstack.com/v1/forward?access_key=' + positionStackAPI + '&query=' + address;
   var impact = "";
   var carYear = carReg[0] + carReg[1];
   var driverLatitude;
@@ -460,7 +460,7 @@ function eventSearch(){
   let found = false;
   if(eventname.length <= 0 && !dateFrom & !dateTo){
     alert("Please enter either event name, or date from and to.");
-    window.location.href = "../view/index.html";
+    window.location.href = "index.html";
   }
   else{
     db.collection("events").get().then((querySnapshot) => {

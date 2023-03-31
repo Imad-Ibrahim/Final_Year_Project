@@ -1,0 +1,18 @@
+[debug] [2023-03-30T16:00:35.174Z] ----------------------------------------------------------------------
+[debug] [2023-03-30T16:00:35.176Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\K00252722\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-03-30T16:00:35.176Z] CLI Version:   11.25.2
+[debug] [2023-03-30T16:00:35.176Z] Platform:      win32
+[debug] [2023-03-30T16:00:35.176Z] Node Version:  v18.15.0
+[debug] [2023-03-30T16:00:35.184Z] Time:          Thu Mar 30 2023 17:00:35 GMT+0100 (Irish Standard Time)
+[debug] [2023-03-30T16:00:35.185Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-30T16:00:35.264Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-30T16:00:35.265Z] > authorizing via signed-in user (imadibrahim54@gmail.com)
+[debug] [2023-03-30T16:00:35.265Z] [iam] checking project sharewheels-f3a8e for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-03-30T16:00:35.270Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/sharewheels-f3a8e:testIamPermissions [none]
+[debug] [2023-03-30T16:00:35.270Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/sharewheels-f3a8e:testIamPermissions x-goog-quota-user=projects/sharewheels-f3a8e
+[debug] [2023-03-30T16:00:35.270Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/sharewheels-f3a8e:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-30T16:00:35.587Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/sharewheels-f3a8e:testIamPermissions 200
+[debug] [2023-03-30T16:00:35.588Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/sharewheels-f3a8e:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-03-30T16:00:35.591Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/sharewheels-f3a8e [none]
+[debug] [2023-03-30T16:00:35.867Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/sharewheels-f3a8e 200

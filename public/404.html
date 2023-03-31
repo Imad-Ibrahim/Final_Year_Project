@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Page Not Found</title>
+    <link href="assets/css/stylesheet.css" rel="stylesheet"/>
+    <link href="assets/css/stylesheet2.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+          <div class="container-fluid">
+            <div id="logo">
+                <a href="index.html"><img id="logoImg" src="assets/images/logo.png" alt="Logo"></a>
+              </div>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" onclick="navBar();"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor01">
+                  <ul class="navbar-nav me-auto">
+                      <li class="nav-item"><a class='nav-link active' href="index.html">Home</a><span class="visually-hidden">(current)</span></li>
+                      <li class="nav-item"><a class='nav-link' href="view/About.html">About</a></li>
+                      <li class="nav-item"><a class='nav-link' href="view/Contact.html">Contact</a></li>
+                      <li class="nav-item" id="chat" style="display: none;"><a class='nav-link' href="view/chat.html">Chat</a></li>
+                      <li class="nav-item" id="signOut" style="display: none;"><a class='nav-link' href="#" onclick="signOut(); return false;">Log out</a></li>
+                      <li class="nav-item" id="signIn" style="display: none;"><a class='nav-link' href="#" onclick="signIn(); return false;">Login/Sign up with
+                        <img id="google" alt="Google sign-in" src="assets/images/google.png" />
+                      </a></li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
+  </header>
+  <div class="container marginTop">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h1 id="username"></h1>
+            <h1 id="noAccess"></h1>
+            <div class="card border-primary mb-3">
+                <h3 class="card-header" style="text-align: center; color: white;">404</h3>
+                <div class="card-body">
+                  <h1>Page Not Found</h1>
+                  <p>The specified file was not found on this website. Please check the URL for mistakes and try again.</p> 
+                  <br>
+                  <a href="index.html" class="btn btn-danger">Back</a>
+                </div>
+                <div class="card-footer text-muted"></div>
+            </div>
+        </div>
+    </div>
+  </div> 
+  </body>
+</html>

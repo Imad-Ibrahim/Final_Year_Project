@@ -23,14 +23,14 @@
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
           <div class="container-fluid">
             <div id="logo">
-                <a href="index.html"><img id="logoImg" src="../assets/images/logo.png" alt="Logo"></a>
+                <a href="../index.html"><img id="logoImg" src="../assets/images/logo.png" alt="Logo"></a>
               </div>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon" onclick="navBar();"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarColor01">
                   <ul class="navbar-nav me-auto">
-                      <li class="nav-item"><a class='nav-link active' href="index.html">Home</a><span class="visually-hidden">(current)</span></li>
+                      <li class="nav-item"><a class='nav-link active' href="../index.html">Home</a><span class="visually-hidden">(current)</span></li>
                       <li class="nav-item"><a class='nav-link' href="About.html">About</a></li>
                       <li class="nav-item"><a class='nav-link' href="Contact.html">Contact</a></li>
                       <li class="nav-item" id="chat" style="display: none;"><a class='nav-link' href="chat.html">Chat</a></li>
@@ -48,25 +48,27 @@
     <div class="row">
         <div class="col-md-10 mx-auto">
             <h1 id="username"></h1>
-            <div class="card border-primary mb-3">
-                <h3 class="card-header" style="text-align: center; color: white;">CONTACT</h3>
+            <h1 id="noAccess"></h1>
+            <div class="card border-primary mb-3" id="passengerForm" style="display: none;">
+                <h3 class="card-header" style="text-align: center; color: white;">Register Passenger Form</h3>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><span class="bold">Location: </span>Clare, Ireland</li>
-                        <li class="list-group-item"><span class="bold">Phone: </span>+353 1234567891</li>
-                        <li class="list-group-item"><span class="bold">Email: </span><a href="mailto:imadibrahim54@gmail.com">imadibrahim54@gmail.com</a></li>
-                        <li class="list-group-item"></li>
-                    </ul>
-                    <form id="contactUsForm">
-                        <label for="name">Name </label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                        <label for="email">Email </label>
-                        <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" required>
-                        <label for="comments">Comment </label>
-                        <textarea class="form-control" id="comments" name="comments" rows="10" required></textarea>
+                    <form id="registerPassengerForm">
+                        <div class="form-group">
+                            <label for="passengerCity">City/Town </label>
+                            <input type="text" class="form-control" id="passengerCity" name="passengerCity" placeholder="Enter your city/town" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="county">County</label>
+                            <select class="form-select" id="county" name="county"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxKmRange">Max KM Range</label>
+                            <input type="number" class="form-control" id="maxKmRange" name="maxKmRange" placeholder="Enter max KM range">
+                            <span>***Defult range is 50km***</span>
+                        </div>
                         <br>
-                        <button type="button" class="btn btn-success" onclick="sendComments();">Send</button>
-                        <input type="reset" class="btn btn-danger" value="Clear">
+                        <button type="button" class="btn btn-success" onclick="registerPassenger();">Register</button>
+                        <a href="../index.html" class="btn btn-danger">Cancel</a>
                     </form>
                 </div>
                 <div class="card-footer text-muted"></div>
