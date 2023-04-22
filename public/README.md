@@ -88,3 +88,10 @@ This is all my work for my final year project (FYP).
 - Web app is now hosted and live.
 - I have fixed paths after hosting it.
 - I have added the https for postionstack which makes it more secure.
+
+## Version22 :smiley:
+### Steps on how to use the web application.
+- I utilized the VS Code application for developing and executing my web application. To enable this, I installed an extension named Live Server, which operates on port 5500, within the VS Code application. Additionally, I incorporated Firebase for database storage and web hosting, requiring me to add localhost 127.0.0.1 to the Authorized domains in Firebase.
+- Upon installing the Live Server extension in VS Code and adding the localhost to Firebase, I could run my web application on my local machine by clicking "Go Live" in the VS Code application. The web application is now live at the following link: **https://sharewheels-f3a8e.web.app/**.
+To begin using the web app, users must first register and then sign up as either a driver or passenger for a chosen event. If registered as a driver, an email notification is sent when a passenger is matched with you. This email contains details about the passenger, the event, and a link to a chat feature for discussing the precise meeting point and time with the passenger.
+- Upon opening the chat window, users can view their driving, attending, or attended events. Once an event is attended, users can rate the driver.
